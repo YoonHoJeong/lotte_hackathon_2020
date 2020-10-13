@@ -15,10 +15,16 @@
 
     <br/>
     {% if search_list %}
-    <h1>검색 결과</h1>
+    <h1>검색 결과: {{search_cnt}}개의 영화 </h1>
     <ul>
         {% for movie in search_list %}
             <h3>{{movie.title}}</h3>
+            {% if movie.poster %}
+            <img src={{movie.poster}} alt="">
+            {% endif %}
+            <p>{{movie.genre}}</p>
+            <p>{{movie.runtime}}</p>
+            <p>{{movie.plot}}</p>
         {% endfor %}
     </ul>
     {% endif %}

@@ -26,6 +26,18 @@ def search(request):
         query = request.GET['query']
         if query:
             res = requests.get(BASE_URL + f"&query={query}").json()
-            search_list = res['Data'][0]['Result']
+            result_list = res['Data'][0]['Result']
+            for movie in result_list:
+                tmp_obj = {}
+                title = movie['title']
+                title.replace("!HS", "").replace("!HE", "")
+                tmp_obj['title'] = title.strip()
+                tmp_obj['plot'] = movie["plots"]['plot'][0]['plotText']
+                tmp_obj['genre'] = movie["genre"]
+                tmp_obj['runtime'] = movie["runtime"]
+                tmp_obj['poster'] = movie['posters']
+                search_list.append(tmp_obj)
 
-    return render(request, "comment.html", {"search_list": search_list})
+            search_cnt = res['TotalCount']
+
+    return render(request, "comment.html", {"search_list": search_list, "search_cnt": search_cnt})
