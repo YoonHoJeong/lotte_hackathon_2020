@@ -18,6 +18,11 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
+from main.views import home, comment, search
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', home, name="home"),
+    path('comment/', comment, name="comment"),
+    path('search/', search, name="search"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

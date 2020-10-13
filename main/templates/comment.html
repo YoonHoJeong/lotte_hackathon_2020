@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    comment page
+    <form action="{% url 'search' %}" method="GET">
+        {% csrf_token %}
+        <input type="text" name="query">
+        <input type="submit" value="검색">
+    </form>
+
+    <br/>
+    {% if search_list %}
+    <h1>검색 결과</h1>
+    <ul>
+        {% for movie in search_list %}
+            <h3>{{movie.title}}</h3>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+</body>
+</html>
