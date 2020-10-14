@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     comment page
     <form action="{% url 'search' %}" method="GET">
@@ -13,21 +15,23 @@
         <input type="submit" value="검색">
     </form>
 
-    <br/>
+    <br />
     {% if search_list %}
     <h1>검색 결과: {{search_cnt}}개의 영화 </h1>
     <ul>
         {% for movie in search_list %}
-            <h3>{{movie.title}}</h3>
-            {% if movie.poster %}
-            <img src={{movie.poster}} alt="">
-            {% endif %}
-            <p>{{movie.genre}}</p>
-            <p>{{movie.runtime}}</p>
-            <p>{{movie.plot}}</p>
+        {% if movie.poster %}
+        <img src={{movie.poster}} alt="">
+        {% endif %}
+        <h3>{{movie.title}}</h3>
+        <!-- <p>{{movie.genre}}</p> -->
+        <p>{{movie.production_year}} | {{movie.runtime}}분</p>
+        <!-- <p>감독 : {{movie.director}}</p> -->
+        <!-- <p>{{movie.plot}}</p> -->
         {% endfor %}
     </ul>
     {% endif %}
 
 </body>
+
 </html>
