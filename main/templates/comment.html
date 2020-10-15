@@ -1,34 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'comment-search-base.html' %}
+{% load static %}
 
 {% block title %}
 Comments
 {% endblock %}
 
-{% block content %}
-    <form action="{% url 'search' %}" method="GET">
-        {% csrf_token %}
-        <input type="text" name="query">
-        <input type="submit" value="검색">
-    </form>
-
-    <br />
-    {% if search_list %}
-    <h1>검색 결과: {{search_cnt}}개의 영화 </h1>
-    <ul class="movies">
-        {% for movie in search_list %}
-        <li class="movie">
-            {% if movie.poster %}
-            <img src={{movie.poster}} alt="">
-            {% else %}
-            <img src="" alt="">
-            {% endif %}
-            <h3>{{movie.title}}</h3>
-            <p>{{movie.production_year}} | {{movie.runtime}}분</p>
-            <!-- <p>{{movie.genre}}</p> -->
-            <!-- <p>감독 : {{movie.director}}</p> -->
-            <!-- <p>{{movie.plot}}</p> -->
-        </li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+{% block subcontent %}
+comment
 {% endblock %}

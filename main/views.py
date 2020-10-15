@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import requests
 
 API_KEY = "1YJNU2R902583045L4Z6"
@@ -21,8 +21,8 @@ def search(request):
     query = ""
     search_list = []
     max_plot_length = 100
-    if request.method == "GET":
 
+    if request.method == "GET":
         query = request.GET['query']
         if query:
             # 사용자가 검색어를 입력했을 때,
@@ -68,5 +68,8 @@ def search(request):
                 tmp_obj['director'] = movie['directors']['director'][0]['directorNm']
 
                 search_list.append(tmp_obj)
+        else:
+            # 검색어가 없는 경우, api 호출 x
+            return redirect('comment')
 
-    return render(request, "comment.html", {"search_list": search_list, "search_cnt": search_cnt})
+    return render(request, "search.html", {"search_list": search_list, "search_cnt": search_cnt})

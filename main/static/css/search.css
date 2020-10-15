@@ -1,0 +1,46 @@
+.search-box {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+
+    margin-top: 20px;
+}
+
+.search-title {
+    padding-left: 20px;
+    font-size: 17px;
+
+}
+
+.search-title .search-theme {
+
+    font-weight: 700;
+}
+
+.input-box {
+    height: fit-content;
+    width: fit-content;
+    border: 2px solid #D44242;
+    border-radius: 18px;
+    padding: 8px 20px;
+
+    margin-top: 10px;
+}
+
+.input-search {
+
+    font-family: 'NanumSquare', sans-serif;
+
+    border: none;
+    outline: none;
+    width: 40vw;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.input-box i {
+    color: #D44242;
+    font-size: 18px;
+}
