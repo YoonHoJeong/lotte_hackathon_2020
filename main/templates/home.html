@@ -7,5 +7,10 @@
 </head>
 <body>
     hello home
+    {% if user.is_authenticated %}
+        login
+    {% else %}
+        logout
+    {% endif %}
 </body>
 </html>

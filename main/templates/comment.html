@@ -1,14 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+{% block title %}
+Comments
+{% endblock %}
 
-<body>
-    comment page
+{% block content %}
     <form action="{% url 'search' %}" method="GET">
         {% csrf_token %}
         <input type="text" name="query">
@@ -18,20 +14,21 @@
     <br />
     {% if search_list %}
     <h1>검색 결과: {{search_cnt}}개의 영화 </h1>
-    <ul>
+    <ul class="movies">
         {% for movie in search_list %}
-        {% if movie.poster %}
-        <img src={{movie.poster}} alt="">
-        {% endif %}
-        <h3>{{movie.title}}</h3>
-        <!-- <p>{{movie.genre}}</p> -->
-        <p>{{movie.production_year}} | {{movie.runtime}}분</p>
-        <!-- <p>감독 : {{movie.director}}</p> -->
-        <!-- <p>{{movie.plot}}</p> -->
+        <li class="movie">
+            {% if movie.poster %}
+            <img src={{movie.poster}} alt="">
+            {% else %}
+            <img src="" alt="">
+            {% endif %}
+            <h3>{{movie.title}}</h3>
+            <p>{{movie.production_year}} | {{movie.runtime}}분</p>
+            <!-- <p>{{movie.genre}}</p> -->
+            <!-- <p>감독 : {{movie.director}}</p> -->
+            <!-- <p>{{movie.plot}}</p> -->
+        </li>
         {% endfor %}
     </ul>
     {% endif %}
-
-</body>
-
-</html>
+{% endblock %}
