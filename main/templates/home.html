@@ -6,11 +6,16 @@
 {% block css %}
 {% endblock %}
 
+{% block theme-month %} 11월, {% endblock %}
+{% block theme-title %} 끝나가는 가을에 다시 보고 싶은 영화를 뽑아주세요 {% endblock %}
+
 {% block content %}
 home page
+
 {% if user.is_authenticated %}
 login
 {% else %}
 logout
 {% endif %}
+
 {% endblock %}
