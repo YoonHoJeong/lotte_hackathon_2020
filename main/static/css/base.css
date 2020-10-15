@@ -1,5 +1,53 @@
 @import "./reset.css";
 
+@font-face {
+    font-family: "NanumSquare";
+    src: url('../fonts/NanumSquareR.ttf') format("truetype");
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: "NanumSquare";
+    src: url('../fonts/NanumSquareB.ttf') format("truetype");
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: "NanumSquare";
+    src: url('../fonts/NanumSquareEB.ttf') format("truetype");
+    font-weight: 800;
+}
+
+@font-face {
+    font-family: "NanumSquare";
+    src: url('../fonts/NanumSquareL.ttf') format("truetype");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "NanumSquareRound";
+    src: url('../fonts/NanumSquareRoundR.ttf') format("truetype");
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: "NanumSquareRound";
+    src: url('../fonts/NanumSquareRoundB.ttf') format("truetype");
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: "NanumSquareRound";
+    src: url('../fonts/NanumSquareRoundEB.ttf') format("truetype");
+    font-weight: 800;
+}
+
+@font-face {
+    font-family: "NanumSquareRound";
+    src: url('../fonts/NanumSquareRoundL.ttf') format("truetype");
+    font-weight: 400;
+}
+
 * {
     box-sizing: border-box;
     text-decoration: none;
@@ -12,4 +60,8 @@ a {
 
 a:visited {
     color: inherit;
+}
+
+body {
+    font-family: "NanumSquare", sans-serif;
 }

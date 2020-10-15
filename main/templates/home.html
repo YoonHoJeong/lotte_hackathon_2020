@@ -1,16 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    hello home
-    {% if user.is_authenticated %}
-        login
-    {% else %}
-        logout
-    {% endif %}
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+home page
+{% if user.is_authenticated %}
+login
+{% else %}
+logout
+{% endif %}
+{% endblock %}
