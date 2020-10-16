@@ -1,25 +1,31 @@
 {% extends 'comment-search-base.html' %}
 {% load static %}
 
+{% block js %}
+<script src="{% static 'js/search.js' %}"></script>
+{% endblock %}
 
 {% block subcontent %}
 {% if search_list %}
-<h1>검색 결과: {{search_cnt}}개의 영화 </h1>
-<ul class="movies">
-    {% for movie in search_list %}
-    <li class="movie">
-        {% if movie.poster %}
-        <img src={{movie.poster}} alt="">
-        {% else %}
-        <img src="" alt="">
-        {% endif %}
-        <h3>{{movie.title}}</h3>
-        <p>{{movie.production_year}} | {{movie.runtime}}분</p>
-        <!-- <p>{{movie.genre}}</p> -->
-        <!-- <p>감독 : {{movie.director}}</p> -->
-        <!-- <p>{{movie.plot}}</p> -->
-    </li>
-    {% endfor %}
-</ul>
+<div class="search-result-title"> <span class="search-term"></span> 검색 결과입니다. </div>
+<div class="search-result-container">
+    <ul class="search-result">
+        {% for movie in search_list %}
+        <li class="movie-item">
+            {% if movie.poster %}
+            <img class="movie-poster" src={{movie.poster}} alt="">
+            {% else %}
+            <img src="" alt="">
+            {% endif %}
+            <h3 class="movie-title">{{movie.title}}</h3>
+            <p>{{movie.production_year}} | {{movie.runtime}}분</p>
+            <!-- <p>{{movie.genre}}</p> -->
+            <!-- <p>감독 : {{movie.director}}</p> -->
+            <!-- <p>{{movie.plot}}</p> -->
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 {% endif %}
 {% endblock %}
+

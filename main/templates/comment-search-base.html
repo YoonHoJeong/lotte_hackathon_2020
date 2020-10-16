@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="{% static 'css/search.css' %}">
 <script src="https://kit.fontawesome.com/9760767faf.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="{% static 'js/search.js' %}"></script>
 {% endblock %}
 
 {% block theme-month %} 12월, {% endblock %}
@@ -23,7 +24,7 @@
         </div>
 
         <div class="input-box">
-            <input class="input-search" type="text" name="query" autocomplete="False">
+            <input class="input-search" type="text" name="query" autocomplete="off">
             <a href="javascript:$('.search-form').submit();">
                 <i class="fas fa-search"></i>
             </a>
