@@ -7,18 +7,22 @@
 
 {% block subcontent %}
 {% if search_list %}
-<div class="search-result-title"> <span class="search-term"></span> 검색 결과입니다. </div>
 <div class="search-result-container">
+    <div class="search-result-title"> 
+        <span class="search-term"></span> 검색 결과입니다. 
+    </div>
     <ul class="search-result">
         {% for movie in search_list %}
         <li class="movie-item">
             {% if movie.poster %}
-            <img class="movie-poster" src={{movie.poster}} alt="">
+            <div class="movie-poster" style="background-image: url('{{movie.poster}}');"></div>
             {% else %}
-            <img src="" alt="">
+            <div class="movie-poster no-image"></div>
             {% endif %}
-            <h3 class="movie-title">{{movie.title}}</h3>
-            <p>{{movie.production_year}} | {{movie.runtime}}분</p>
+            <div class="movie-info">
+                <h3 class="movie-title">{{movie.title}}</h3>
+                <span class="movie-summary">{{movie.production_year}} | {{movie.runtime}}분</span>
+            </div>
             <!-- <p>{{movie.genre}}</p> -->
             <!-- <p>감독 : {{movie.director}}</p> -->
             <!-- <p>{{movie.plot}}</p> -->
@@ -28,4 +32,3 @@
 </div>
 {% endif %}
 {% endblock %}
-
