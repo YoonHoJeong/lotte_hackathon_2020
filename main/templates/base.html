@@ -1,0 +1,58 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}
+        {% endblock %}
+    </title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block css %}
+    {% endblock %}
+    
+    {% block js %}
+    {% endblock %}
+</head>
+
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-col">
+                <a href="{% url 'home' %}">투표하기</a>
+            </div>
+            <div class="nav-col">
+                <a href="https://www.lottecinema.co.kr/NLCHS">
+                    <img class="logo" src="{% static 'images/lotte-icon.jpg' %}" alt="롯데 시네마">
+                </a>
+            </div>
+            <div class="nav-col">
+                <a href="{% url 'comment' %}">의견내기</a>
+            </div>
+            <div class="auth-box">
+                {% if user.is_authenticated %}
+                <div class="auth-info">
+                    {{user}}님
+                </div>
+                <a href="{% url 'logout_view' %}">로그아웃</a>
+                {% else %}
+                <a href="{% url 'login_view' %}">로그인</a>
+                {% endif %}
+            </div>
+        </nav>
+        <div class="theme-box">
+            <div class="theme-month">{% block theme-month %} {% endblock %}</div>
+            <div class="theme-title">{% block theme-title %} {% endblock %}</div>
+        </div>
+    </header>
+
+    <main class="main">
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+
+</html>

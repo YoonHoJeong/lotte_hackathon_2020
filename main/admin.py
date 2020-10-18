@@ -1,9 +1,10 @@
 from django.contrib import admin
 
-from .models import Movie, Theme, Comment
+from .models import Theme, Movie, Comment, Vote, VoteMovie
 
 # Register your models here.
-
-admin.site.register(Movie)
 admin.site.register(Theme)
+admin.site.register(Movie)
+admin.site.register(VoteMovie)
 admin.site.register(Comment)
+admin.site.register(Vote)

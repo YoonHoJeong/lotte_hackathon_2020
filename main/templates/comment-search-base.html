@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+<script src="https://kit.fontawesome.com/9760767faf.js" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="{% static 'js/search.js' %}"></script>
+{% endblock %}
+
+{% block theme-month %} 12월, {% endblock %}
+{% block theme-title %} 롯데시네마에서 다시 보고 싶은 "마음이 따뜻해지는 크리스마스 영화"를 알려주세요 {% endblock %}
+
+{% block content %}
+<div class="search-box">
+    <form class="search-form" action="{% url 'search' %}" method="GET">
+        {% csrf_token %}
+        <div class="search-title">
+            <span class="search-theme"> 마음이 따뜻해지는 크리스마스 영화 </span>
+            <span> 검색하기 </span>
+        </div>
+
+        <div class="input-box">
+            <input class="input-search" type="text" name="query" autocomplete="off">
+            <a href="javascript:$('.search-form').submit();">
+                <i class="fas fa-search"></i>
+            </a>
+        </div>
+        <!-- <input class="" type="submit" value="검색"> -->
+    </form>
+</div>
+
+{% block subcontent %}
+{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block theme-month %} 11월, {% endblock %}
+{% block theme-title %} 끝나가는 가을에 다시 보고 싶은 영화를 뽑아주세요 {% endblock %}
+
+{% block content %}
+<!--<p>{{idx}}</p>-->
+<div><span>{{movie.title}}</span></div>
+
+<form action = "{% url 'movie' %}" method="POST">
+    <input name = "title" value = "{{movie.title}}" type = "hidden"> <!-- 변경 필요 / 현재는 title 기반 검색 / idx 기반 검색으로 변경해야함 -->
+    <input name = "comment" type = "text">
+    <input type = "submit" value = "작성">
+</form>
+
+{% endblock %}
