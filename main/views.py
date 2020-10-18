@@ -19,12 +19,10 @@ def movie(request):
     max_plot_length = 100
 
     if request.method == "GET":
-        idx = request.GET['idx']
+        movie_id = request.GET.get('movieId')
+        movie_seq = request.GET.get('movieSeq')
+        temp = BASE_URL + f"&movieId={movie_id}&movieSeq={movie_seq}"
 
-        print(idx)
-
-        temp = BASE_URL + f"&docid={idx}"
-        print(temp)
         res = requests.get(temp).json()
 
         result_list = res['Data'][0]['Result']
@@ -58,8 +56,8 @@ def movie(request):
 
             break
     else:
-            # 검색어가 없는 경우, api 호출 x
-            return redirect('comment')
+        # 검색어가 없는 경우, api 호출 x
+        return redirect('comment')
 
     return render(request, "movie.html", {"movie" : tmp_obj})
 
@@ -100,10 +98,10 @@ def search(request):
                 title = title[:title_length].strip()
                 poster = movie['posters']
                 poster_idx = poster.find("|")
-                idx = movie['DOCID']
-
-                print(idx)
-
+                # idx = movie['DOCID']
+                movie_id = movie['movieId']
+                movie_seq = movie['movieSeq']
+                
                 plot = movie["plots"]['plot'][0]['plotText']
                 if len(plot) > max_plot_length:
                     plot = plot[:max_plot_length] + "..."
@@ -119,7 +117,9 @@ def search(request):
                 tmp_obj['poster'] = poster
                 tmp_obj['production_year'] = movie['prodYear']
                 tmp_obj['director'] = movie['directors']['director'][0]['directorNm']
-                tmp_obj['idx'] = idx 
+                # tmp_obj['idx'] = idx 
+                tmp_obj['movie_id'] = movie_id
+                tmp_obj['movie_seq'] = movie_seq
 
                 search_list.append(tmp_obj)
         else:

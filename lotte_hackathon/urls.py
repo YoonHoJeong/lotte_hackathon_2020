@@ -26,5 +26,5 @@ urlpatterns = [
     path('comment/', comment, name="comment"),
     path('search/', search, name="search"),
     path('', include('accounts.urls')),
-    path('movie', movie, name = 'movie'),
+    path('movie/', movie, name = 'movie'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
