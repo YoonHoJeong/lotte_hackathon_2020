@@ -47,7 +47,7 @@
 
 .search-result-title {
     font-size: 20px;
-    margin-top: 40px;
+    margin-right: auto;
 }
 
 .search-term {
@@ -55,33 +55,57 @@
 }
 
 .search-result-container {
-    display: flex;
-    justify-content: center;
+    width: fit-content;
+    min-width: 961px;
+    margin-top: 40px;
+    padding: 0px 50px;
 }
 
 .search-result {
     display: flex;
     flex-wrap: wrap;
-
     margin-top: 40px;
-    padding: 30px;
 
     row-gap: 20px;
     column-gap: 20px;
 }
 
+.movie-info {
+    padding: 0px 7px;
+}
+
 .movie-title {
     font-size: 17px;
+    font-weight: 700;
+    margin-top: 7px;
+    line-height: 20px;
+}
+
+.movie-summary {
+    font-size: 12px;
+    opacity: 0.6;
+    margin-top: 4px;
 }
 
 .movie-item {
-    flex-shrink: unset;
+    width: 20%;
+    max-width: 240px;
 }
 
 .movie-item .movie-poster {
-    width: 200px;
-    height: 282px;
+    width: 100%;
+    padding-top: 141%;
+    border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 
+.movie-poster.no-image {
+    background-image: url('/static/images/noImage.gif');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
 
 

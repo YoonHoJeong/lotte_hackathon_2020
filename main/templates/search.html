@@ -8,36 +8,33 @@
 
 {% block subcontent %}
 {% if search_list %}
-<div class="search-result-title"> <span class="search-term"></span> 검색 결과입니다. </div>
 <div class="search-result-container">
+    <div class="search-result-title">
+        <span class="search-term"></span> 검색 결과입니다.
+    </div>
     <ul class="search-result">
-        {% for movie in search_list %}       
-            <li class="movie-item" >
-                <form id="movie{{ forloop.counter }}-form" action = "{% url 'movie' %}" method="GET">                     
-                <!--<form action="{% url 'movie' %}" method="GET">-->
-                    {% csrf_token %}
-                    <input type="hidden" value={{movie.movie_id}} name = "movieId" >
-                    <input type="hidden" value={{movie.movie_seq}} name = "movieSeq" >
-                    <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
-                        {% if movie.poster %}
-                        <img class="movie-poster" src={{movie.poster}} alt="">
-                        {% else %}
-                        <img src="" alt="">
-                        {% endif %}
+        {% for movie in search_list %}
+        <li class="movie-item">
+            <form id="movie{{ forloop.counter }}-form" action="{% url 'movie' %}" method="GET">
+                {% csrf_token %}
+                <input type="hidden" value={{movie.movie_id}} name="movieId">
+                <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
+                <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
+                    {% if movie.poster %}
+                    <div class="movie-poster" style="background-image: url('{{movie.poster}}');"></div>
+                    {% else %}
+                    <div class="movie-poster no-image"></div>
+                    {% endif %}
+                    <div class="movie-info">
                         <h3 class="movie-title">{{movie.title}}</h3>
-                    </a>
-                    <p>{{movie.production_year}} | {{movie.runtime}}분</p> 
-                    <input type="submit" value="의견내기">
-                    <!-- <p>{{movie.genre}}</p> -->
-                    <!-- <p>감독 : {{movie.director}}</p> -->
-                    <!-- <p>{{movie.plot}}</p> -->
-            <!--</form>-->
-                </form>
-            </li>
-        </a>
+                        <span class="movie-summary">{{movie.production_year}} | {{movie.runtime}}분</span>
+                    </div>
+                </a>
+                <input type="submit" value="의견내기">
+            </form>
+        </li>
         {% endfor %}
     </ul>
 </div>
 {% endif %}
 {% endblock %}
-
