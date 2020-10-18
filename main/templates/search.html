@@ -7,34 +7,44 @@
 {% endblock %}
 
 {% block subcontent %}
+<!-- <main class="search-main"> -->
 {% if search_list %}
-<div class="search-result-container">
-    <div class="search-result-title">
+<!-- <div class="search-result-container"> -->
+
+<ul class="search-result">
+    <li class="search-result-title">
         <span class="search-term"></span> 검색 결과입니다.
-    </div>
-    <ul class="search-result">
-        {% for movie in search_list %}
-        <li class="movie-item">
-            <form id="movie{{ forloop.counter }}-form" action="{% url 'movie' %}" method="GET">
-                {% csrf_token %}
-                <input type="hidden" value={{movie.movie_id}} name="movieId">
-                <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
-                <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
-                    {% if movie.poster %}
-                    <div class="movie-poster" style="background-image: url('{{movie.poster}}');"></div>
-                    {% else %}
-                    <div class="movie-poster no-image"></div>
-                    {% endif %}
-                    <div class="movie-info">
+    </li>
+    {% for movie in search_list %}
+    <li class="movie-item">
+        <form id="movie{{ forloop.counter }}-form" action="{% url 'movie' %}" method="GET">
+            {% csrf_token %}
+            <input type="hidden" value={{movie.movie_id}} name="movieId">
+            <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
+            <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
+                {% if movie.poster %}
+                <div class="movie-poster" style="background-image: url('{{movie.poster}}');"></div>
+                {% else %}
+                <div class="movie-poster no-image"></div>
+                {% endif %}
+            </a>
+            <div class="submit-input-box">
+                <div class="movie-info">
+                    <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
                         <h3 class="movie-title">{{movie.title}}</h3>
-                        <span class="movie-summary">{{movie.production_year}} | {{movie.runtime}}분</span>
-                    </div>
-                </a>
-                <input type="submit" value="의견내기">
-            </form>
-        </li>
-        {% endfor %}
-    </ul>
-</div>
+                    </a>
+                    <span class="movie-summary">{{movie.production_year}} | {{movie.runtime}}분</span>
+                </div>
+                <input class="submit-btn" type="submit" value="의견내기">
+            </div>
+
+
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+<!-- </div> -->
 {% endif %}
+<!-- </main> -->
+
 {% endblock %}
