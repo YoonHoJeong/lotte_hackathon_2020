@@ -3,29 +3,48 @@
 
 {% block js %}
 <script src="{% static 'js/search.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 {% endblock %}
 
 {% block subcontent %}
+<!-- <main class="search-main"> -->
 {% if search_list %}
-<div class="search-result-title"> <span class="search-term"></span> 검색 결과입니다. </div>
-<div class="search-result-container">
-    <ul class="search-result">
-        {% for movie in search_list %}
-        <li class="movie-item">
-            {% if movie.poster %}
-            <img class="movie-poster" src={{movie.poster}} alt="">
-            {% else %}
-            <img src="" alt="">
-            {% endif %}
-            <h3 class="movie-title">{{movie.title}}</h3>
-            <p>{{movie.production_year}} | {{movie.runtime}}분</p>
-            <!-- <p>{{movie.genre}}</p> -->
-            <!-- <p>감독 : {{movie.director}}</p> -->
-            <!-- <p>{{movie.plot}}</p> -->
-        </li>
-        {% endfor %}
-    </ul>
-</div>
-{% endif %}
-{% endblock %}
+<!-- <div class="search-result-container"> -->
 
+<ul class="search-result">
+    <li class="search-result-title">
+        <span class="search-term"></span> 검색 결과입니다.
+    </li>
+    {% for movie in search_list %}
+    <li class="movie-item">
+        <form id="movie{{ forloop.counter }}-form" action="{% url 'movie' %}" method="GET">
+            {% csrf_token %}
+            <input type="hidden" value={{movie.movie_id}} name="movieId">
+            <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
+            <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
+                {% if movie.poster %}
+                <div class="movie-poster" style="background-image: url('{{movie.poster}}');"></div>
+                {% else %}
+                <div class="movie-poster no-image"></div>
+                {% endif %}
+            </a>
+            <div class="submit-input-box">
+                <div class="movie-info">
+                    <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
+                        <h3 class="movie-title">{{movie.title}}</h3>
+                    </a>
+                    <span class="movie-summary">{{movie.production_year}} | {{movie.runtime}}분</span>
+                </div>
+                <input class="submit-btn" type="submit" value="의견내기">
+            </div>
+
+
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+<!-- </div> -->
+{% endif %}
+<!-- </main> -->
+
+{% endblock %}
