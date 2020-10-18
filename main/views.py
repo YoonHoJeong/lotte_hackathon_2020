@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from .models import Movie, Comment, Theme
 import requests
 
 API_KEY = "1YJNU2R902583045L4Z6"
@@ -15,8 +16,53 @@ def comment(request):
     return render(request, "comment.html")
 
 def movie(request):
-    idx = ""
+
     max_plot_length = 100
+
+    if request.method == "POST":
+        movie_id = request.POST.get('movieId')
+        movie_seq = request.POST.get('movieSeq')
+        comment = request.POST.get('comment')
+
+        movie_obj = Movie.objects.all() #현재 Movie model 전부 가져오기
+
+        if movie_obj.first(movie_id = movie_id) == None : #현재 오류 지점 / 현재 모델이 없다면 api 기반으로 모델 생성
+            temp = BASE_URL + f"&movieId={movie_id}&movieSeq={movie_seq}"
+            res = requests.get(temp).json()
+            result_list = res['Data'][0]['Result']
+
+            for movie in result_list:
+
+                tmp_obj = {}
+                movie_title = movie['titleEtc']
+                title_length = movie_title.find("^")
+                movie_title = movie_title[:title_length].strip()
+                poster = movie['posters']
+                poster_idx = poster.find("|")
+                idx = movie['DOCID']
+
+                plot = movie["plots"]['plot'][0]['plotText']
+                if len(plot) > max_plot_length:
+                    plot = plot[:max_plot_length] + "..."
+
+                if poster_idx != -1:
+                    poster = poster[:poster_idx]
+
+                tmp_obj['title'] = movie_title
+                tmp_obj['plot'] = plot
+                tmp_obj['genre'] = movie["genre"]
+                tmp_obj['runtime'] = movie["runtime"]
+
+                tmp_obj['poster'] = poster
+                tmp_obj['production_year'] = movie['prodYear']
+                tmp_obj['director'] = movie['directors']['director'][0]['directorNm']
+                
+                break
+
+            movie_instance = Movie(title = tmp_obj['title'],theme = '',genre =  tmp_obj['genre'], director = tmp_obj['director'], 
+            production_year = tmp_obj['production_year'], runtime = tmp_obj['runtime'], plot = tmp_obj['plot'], movie_id=movie_id)
+            # 모든 요소 가져와서 Movie 모델 생성
+            
 
     if request.method == "GET":
         movie_id = request.GET.get('movieId')

@@ -23,6 +23,8 @@ class Movie(models.Model):
     runtime = models.PositiveIntegerField()
     plot = models.TextField()
 
+    movie_id = models.CharField(max_length=200)
+
     possible = models.BooleanField(default=False)    # 개봉 가능한지
     subrun = models.BooleanField(default=False)      # 이전에 개봉 했었는지
 
