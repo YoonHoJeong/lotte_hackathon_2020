@@ -26,7 +26,7 @@ def movie(request):
 
         movie_obj = Movie.objects.all() #현재 Movie model 전부 가져오기
 
-        if movie_obj.first(movie_id = movie_id) == None : #현재 오류 지점 / 현재 모델이 없다면 api 기반으로 모델 생성
+        if movie_obj.filter(movie_id = movie_id).exists() == False : 
             temp = BASE_URL + f"&movieId={movie_id}&movieSeq={movie_seq}"
             res = requests.get(temp).json()
             result_list = res['Data'][0]['Result']
@@ -64,7 +64,7 @@ def movie(request):
             # 모든 요소 가져와서 Movie 모델 생성
             
 
-    if request.method == "GET":
+    elif request.method == "GET":
         movie_id = request.GET.get('movieId')
         movie_seq = request.GET.get('movieSeq')
         temp = BASE_URL + f"&movieId={movie_id}&movieSeq={movie_seq}"
