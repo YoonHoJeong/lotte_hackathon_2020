@@ -19,7 +19,7 @@ def comment(request):
 
 def movie(request):
 
-    max_plot_length = 100
+    max_plot_length = 300
     
     comment_list = []
 

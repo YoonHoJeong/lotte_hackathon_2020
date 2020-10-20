@@ -1,11 +1,92 @@
-.movie-show{
-    display: flex;
+
+.movie-info {
+    padding: 7px 7px;
 }
 
-.movie-poster-yug{
-    flex : 1;
+.movie-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin-top: 7px;
+    line-height: 20px;
 }
 
-.movie-summary{
-    flex : 1;
+.movie-strong{
+    font-weight: 700;
+}
+
+.movie-summary {
+    width: 50%;
+    font-size: 12px;
+    opacity: 0.6;
+    margin-top: 4px;
+}
+
+.comment-content {
+    font-weight: 100;
+    width: 100%;
+    font-size: 15px;
+    padding: 10px 10px;
+}
+
+.comment-input{
+    width: 80%;
+    font-size: 15px;
+}
+
+
+.comment-submit{
+    font-size: 15px;
+    padding: 10px 10px;
+}
+
+.comment-intro{
+    font-size: 25px;
+    padding: 10px 10px;
+}
+
+.container.line{
+    color:#949494;
+    width: 100%;
+    padding: 10px 10px;
+}
+
+.lotte{
+    font-weight: 500;
+    color: #D44242;
+}
+
+.re{
+    font-weight: 500;
+    color: #FFFFFF;
+}
+
+.comment-user{
+    font-weight: 500;
+    width: 80%;
+    font-size: 15px;
+    padding: 10px 10px;
+}
+
+.container.movie-poster {
+    width: 50%;
+    height: 300px;
+    border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.container.movie-poster.no-image {
+    background-image: url('/static/images/noImage.gif');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+.container{
+    background-color: #2E2E2E;
+    font-family: 'NanumSquare', sans-serif;
+
+    width: fit-content;
+    color: #FFFFFF;
+    padding : 20px 30px;
 }
