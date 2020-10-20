@@ -1,10 +1,21 @@
 {% extends 'comment-search-base.html' %}
 {% load static %}
 
-{% block title %}
-Comments
-{% endblock %}
+{% block title %}Comments{% endblock %}
+{% block link %}{% static 'css/comment.css' %}{% endblock %}
 
 {% block subcontent %}
-comment
+<!--Top Requsted Movie-->
+<div class>
+    {% for movie in top_movies %}
+    <a href = "{% url 'movie' %}">
+        <div class = "top_requested_movie">
+            <p><img src="{{ movie.poster.url }}" width="265" height="380" alt="Movie_Poster" ></p>
+            <h4>{{ movie.title }}</h4>
+            <h6>{{ movie.production_year }} | {{ movie.runtime }}분</h6>
+            <button type='button' class="btn">의견내기</button>
+        </div>
+    </a>
+    {% endfor %}
+</div>
 {% endblock %}
