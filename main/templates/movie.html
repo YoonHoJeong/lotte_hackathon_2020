@@ -11,12 +11,53 @@
 
 {% block content %}
 <!--<p>{{idx}}</p>-->
-<div><span>{{movie.title}}</span></div>
+
+<div class = "movie-show">
+    {% if movie.poster %}
+    <div class="movie-poster, movie-poster-yug" style="background-image: url('{{movie.poster}}');"></div>
+    {% else %}
+    <div class="movie-poster no-image"></div>
+    {% endif %}
+    
+    <div class = 'movie-summary'>
+        <div>{{movie.title}}</div>
+        <div>장르 {{movie.genre}} | {{movie.production_year}} 개봉 | {{movie.runtime}} 분 </div>
+        <div>감독 {{movie.director}}</div>
+        <div>줄거리</div>
+        <div>{{movie.plot}}</div>
+        <form action = "{% url 'movie' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" value={{movie.movie_id}} name="movieId">
+            <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
+            <input type = "submit" value = "재개봉 응원해요">
+        </form>
+    </div>
+</div>
+
+
+{% for comment in comment_list %}
+<div>
+    <br>
+    {% if comment %}
+    <span> {{ comment.user.username }} | {{ comment.created_at }} </span>
+    
+    <br>
+
+    <div>
+        {{ comment.content }}
+    </div>
+    {% endif %}
+    <br>
+</div>
+{% endfor %}
+
 
 <form action = "{% url 'movie' %}" method="POST">
     {% csrf_token %}
     <input name = "title" value = "{{movie.title}}" type = "hidden"> <!-- 변경 필요 / 현재는 title 기반 검색 / idx 기반 검색으로 변경해야함 -->
     <input name = "comment" type = "text">
+    <input type="hidden" value={{movie.movie_id}} name="movieId">
+    <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
     <input type = "submit" value = "작성">
 </form>
 

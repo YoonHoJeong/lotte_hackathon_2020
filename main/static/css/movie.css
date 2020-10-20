@@ -1,0 +1,11 @@
+.movie-show{
+    display: flex;
+}
+
+.movie-poster-yug{
+    flex : 1;
+}
+
+.movie-summary{
+    flex : 1;
+}
