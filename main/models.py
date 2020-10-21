@@ -16,7 +16,7 @@ class Theme(models.Model):
 class Movie(models.Model):
     title = models.CharField(max_length=100)
     theme = models.ManyToManyField(Theme)
-
+    poster = models.ImageField(blank=False, null=True)
     genre = models.CharField(max_length=200)
     director = models.CharField(max_length=200)
     production_year = models.PositiveIntegerField()

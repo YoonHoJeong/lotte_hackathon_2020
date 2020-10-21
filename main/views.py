@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Count
 import requests
-from .models import VoteMovie, Vote
 
+from .models import VoteMovie, Vote, Movie
 
 API_KEY = "1YJNU2R902583045L4Z6"
 BASE_URL = f"http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey={API_KEY}"
@@ -18,7 +18,9 @@ def home(request):
 
 
 def comment(request):
-    return render(request, "comment.html")
+    movies = Movie.objects.all()
+    top_movies = Movie.objects.all().order_by('?')[:8]
+    return render(request, "comment.html", {'movies' : movies, "top_movies" : top_movies})
 
 def movie(request):
     idx = ""
