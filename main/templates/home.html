@@ -29,7 +29,9 @@
                 <img src="{{ votemovie.movie.poster.url }}">
             </div>
             {% else %}
-            <div class="no-image"></div>
+                <div class="no-image">
+                    <img src="{% static 'images/noImage.gif' %}">
+                </div>
             {% endif %}
 
             <div class="submit-input-box">

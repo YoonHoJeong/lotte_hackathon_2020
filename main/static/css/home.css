@@ -23,7 +23,7 @@ h2 {
 .votemovie {
     display: inline-flex;
     align-items: center;
-    margin: 90px;
+    margin: 100px;
     flex-direction: column;
 }
 
@@ -41,7 +41,6 @@ h2 {
 }
 
 .no-image {
-    background-image: url('/static/images/noImage.gif');
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
