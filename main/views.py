@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from .models import Movie, Comment, Theme
+from .models import Movie, Comment, Theme, Like
 from django.conf import settings
+from django.contrib import messages
 from datetime import datetime
 import requests
 
@@ -26,8 +27,8 @@ def comment(request):
 
 def movie(request):
 
-    max_plot_length = 300
-    
+    max_plot_length = 300    
+    user_like = 0
     comment_list = []
 
     if request.method == "POST":
@@ -86,6 +87,19 @@ def movie(request):
         if comment :
             comment_instance = Comment(user = request.user, movie = tmp_obj, content = comment)        
             comment_instance.save()
+        else :
+
+            like_obj = Like.objects.all()
+
+            user_like = 1
+
+            for like in like_obj :
+                if like.movie.movie_id == movie_id and like.movie.movie_seq == movie_seq and like.user == request.user :
+                    user_like = -1
+
+            if user_like == 1:
+                like_instance = Like(movie=tmp_obj, user=request.user)
+                like_instance.save()      
 
         comment_obj = Comment.objects.all()
 
@@ -150,10 +164,20 @@ def movie(request):
             tmp_obj['movie_seq'] = movie_seq
 
             break
+
     else:
         return redirect('comment')
 
-    return render(request, "movie.html", {"movie" : tmp_obj, "comment_list" : comment_list})
+    like_obj = Like.objects.all()
+
+    like_num = 0
+
+    for like in like_obj :
+        if like.movie.movie_id == movie_id and like.movie.movie_seq == movie_seq :
+            like_num += 1
+
+
+    return render(request, "movie.html", {"movie" : tmp_obj, "comment_list" : comment_list, "like_num" : like_num, 'user_like' : user_like})
 
 def search(request):
     # request -> response
