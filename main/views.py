@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Count
 import requests
-from .models import Movie
+
+from .models import VoteMovie, Vote, Movie
 
 API_KEY = "1YJNU2R902583045L4Z6"
 BASE_URL = f"http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey={API_KEY}"
@@ -9,7 +11,10 @@ BASE_URL = f"http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_
 
 
 def home(request):
-    return render(request, "home.html")
+    votemovies = VoteMovie.objects.all()
+    results = Vote.objects.values('movie_id').annotate(count=Count('movie_id'))
+    total = Vote.objects.all().count()
+    return render(request, "home.html", {'votemovies' : votemovies, 'results' : results})
 
 
 def comment(request):
@@ -130,3 +135,24 @@ def search(request):
             return redirect('comment')
 
     return render(request, "search.html", {"search_list": search_list, "search_cnt": search_cnt})
+
+
+def vote(request):
+    if request.method == 'POST':
+        vote = Vote()
+        vote.user_id = request.user.id
+        vote.movie_id = request.POST['votemovie']
+   
+        vote.save()
+
+        return redirect('home')
+
+
+
+            
+
+
+
+
+
+    
