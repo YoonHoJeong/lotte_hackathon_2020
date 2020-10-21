@@ -12,11 +12,12 @@
 {% block theme-title %} 끝나가는 가을에 다시 보고 싶은 영화를 뽑아주세요 {% endblock %}
 
 {% block content %}
-<!--<p>{{idx}}</p>-->
+
 
 <div class = "container">
     {% if movie.poster %}
-    <div class="movie-poster" style="background-image: url('{{movie.poster}}');"></div>
+    <img class='movie-poster' src = "{{movie.poster}}">
+    <!--<div class="movie-poster" style="background-image: url('{{movie.poster}}');"></div>-->
     {% else %}
     <div class="movie-poster no-image"></div>
     {% endif %}
@@ -60,10 +61,10 @@
 
     <form action = "{% url 'movie' %}" method="POST">
         {% csrf_token %}
-        <input name = "title" value = "{{movie.title}}" type = "hidden"> <!-- 변경 필요 / 현재는 title 기반 검색 / idx 기반 검색으로 변경해야함 -->
-        <input class='comment-input' name = "comment" type = "text" value="해당 영화의 극장 재개봉에 대한 의견을 자유롭게 남겨주세요.">
-        <input type="hidden" value={{movie.movie_id}} name="movieId">
-        <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
+        <input name = "title" value = "{{movie.title}}" type = "hidden">
+        <input class='comment-input' name = "comment" type = "text" placeholder="{{user.username}}님 반갑습니다.&#13;&#10; &#13;&#10;해당 영화의 극장 재개봉에 대한 의견을 자유롭게 남겨주세요.">
+        <input type="hidden" value="{{movie.movie_id}}" name="movieId">
+        <input type="hidden" value="{{movie.movie_seq}}" name="movieSeq">
         <input  class="comment-submmit" type="submit" value = "작성">
     </form>
 
