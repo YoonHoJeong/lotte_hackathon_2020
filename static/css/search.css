@@ -15,11 +15,14 @@
 .search-title {
     padding-left: 20px;
     font-size: 17px;
-
 }
 
 .search-title .search-theme {
 
+    font-weight: 700;
+}
+
+.search-term {
     font-weight: 700;
 }
 
@@ -34,7 +37,6 @@
 }
 
 .input-search {
-
     font-family: 'NanumSquare', sans-serif;
 
     border: none;
@@ -50,27 +52,11 @@
     font-size: 18px;
 }
 
-.search-result-title {
-    font-size: 20px;
-    margin-right: auto;
 
-    grid-column: 1/-1;
-}
-
-.search-term {
-    font-weight: 700;
-}
-
-.search-result-container {
-    width: fit-content;
-    min-width: 961px;
-    margin-top: 40px;
-    padding: 0px 50px;
-}
-
-.search-result {
+/* movie 보여주는 style */
+.movie-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 30px;
     place-items: stretch;
 
@@ -79,8 +65,11 @@
     margin-top: 40px;
 }
 
-.movie-item {
- 
+.movie-list-title {
+    font-size: 20px;
+    margin-right: auto;
+
+    grid-column: 1/-1;
 }
 
 .movie-info {

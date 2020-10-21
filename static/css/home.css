@@ -89,3 +89,14 @@ h2 {
 .submit-btn:hover {
     background-color: #f15d5d;
 }
+
+/* 정윤호 추가 */
+.home-main {
+    position: relative;
+}
+
+.add-vote-movie-btn {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
