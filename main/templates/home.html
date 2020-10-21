@@ -1,14 +1,54 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
+투표 페이지
 {% endblock %}
 
 {% block css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<script src="https://kit.fontawesome.com/9760767faf.js" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 {% endblock %}
 
 {% block theme-month %} 11월, {% endblock %}
 {% block theme-title %} 끝나가는 가을에 다시 보고 싶은 영화를 뽑아주세요 {% endblock %}
 
 {% block content %}
-home page
+
+
+<body>
+    <div class="titlebox">
+    <h2>투표하기</h2>
+    </div>
+
+    {% for votemovie in votemovies %}
+        <div class="votemovie">
+            {% if movie.poster %}
+            <div class="movie-poster">
+                <img src="{{ votemovie.movie.poster.url }}">
+            </div>
+            {% else %}
+            <div class="no-image"></div>
+            {% endif %}
+
+            <div class="submit-input-box">
+                <div class="movie-info">
+                    <h3 class="movie-title">{{ votemovie.movie.title }}</h3>
+
+                    {% for result in results %}
+                    <h5> {{ result }} </h5>  
+                    {% endfor %}                 
+
+                    <form action="{% url 'vote' %}" method="POST">
+                        {% csrf_token %}
+                        <button name="votemovie" value="{{ votemovie.movie.id }}" class="submit-btn" type="submit">투표하기</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</body>
+
+
 {% endblock %}
