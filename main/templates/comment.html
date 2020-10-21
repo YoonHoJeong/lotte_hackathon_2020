@@ -1,10 +1,37 @@
 {% extends 'comment-search-base.html' %}
 {% load static %}
 
-{% block title %}
-Comments
-{% endblock %}
+{% block title %}Comments{% endblock %}
+{% block link %}{% static 'css/comment.css' %}{% endblock %}
 
 {% block subcontent %}
-comment
+<!--Top Requsted Movie-->
+<div class="comment-result-container">
+    <div class="comment-result-title">
+        <span class="comment-term"></span> 의견을 달아주세요
+    </div>
+    <ul class="comment-result">
+        {% for movie in top_movies %}
+        <li class="movie-item">
+            <form id="movie{{ forloop.counter }}-form" action="{% url 'movie' %}" method="GET">
+                {% csrf_token %}
+                <input type="hidden" value={{movie.movie_id}} name="movieId">
+                <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
+                <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
+                    {% if movie.poster %}
+                    <div class="movie-poster" style="background-image: url('{{movie.poster}}');"></div>
+                    {% else %}
+                    <div class="movie-poster no-image"></div>
+                    {% endif %}
+                    <div class="movie-info">
+                        <h3 class="movie-title">{{movie.title}}</h3>
+                        <span class="movie-summary">{{movie.production_year}} | {{movie.runtime}}분</span>
+                    </div>
+                </a>
+                <input type="submit" value="의견내기">
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}

@@ -1,9 +1,8 @@
-from django.shortcuts import render, redirect
-from .models import Movie, Comment, Theme, Like
-from django.conf import settings
-from django.contrib import messages
-from datetime import datetime
+from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Count
 import requests
+
+from .models import VoteMovie, Vote, Movie, Comment, Like
 
 API_KEY = "1YJNU2R902583045L4Z6"
 BASE_URL = f"http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey={API_KEY}"
@@ -12,11 +11,15 @@ BASE_URL = f"http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_
 
 
 def home(request):
-    return render(request, "home.html")
+    votemovies = VoteMovie.objects.all()
+    results = Vote.objects.values('movie_id').annotate(count=Count('movie_id'))
+    total = Vote.objects.all().count()
+    return render(request, "home.html", {'votemovies' : votemovies, 'results' : results})
 
 
 def comment(request):
-    return render(request, "comment.html")
+    top_movies = Movie.objects.all().order_by('num_like')[:8]
+    return render(request, "comment.html", {"top_movies" : top_movies})
 
 def movie(request):
 
@@ -67,7 +70,7 @@ def movie(request):
                 break
 
 
-            movie_instance = Movie(title = tmp_obj['title'], genre =  tmp_obj['genre'], director = tmp_obj['director'], 
+            movie_instance = Movie(title = tmp_obj['title'], genre =  tmp_obj['genre'], director = tmp_obj['director'], poster=tmp_obj['poster'],
             production_year = tmp_obj['production_year'], runtime = tmp_obj['runtime'], plot = tmp_obj['plot'], movie_id=movie_id, movie_seq=movie_seq)
 
             movie_instance.save()
@@ -93,6 +96,7 @@ def movie(request):
             if user_like == 1:
                 like_instance = Like(movie=tmp_obj, user=request.user)
                 like_instance.save()      
+                tmp_obj.num_like += 1
 
         comment_obj = Comment.objects.all()
 
@@ -238,3 +242,24 @@ def search(request):
             return redirect('comment')
 
     return render(request, "search.html", {"search_list": search_list, "search_cnt": search_cnt})
+
+
+def vote(request):
+    if request.method == 'POST':
+        vote = Vote()
+        vote.user_id = request.user.id
+        vote.movie_id = request.POST['votemovie']
+   
+        vote.save()
+
+        return redirect('home')
+
+
+
+            
+
+
+
+
+
+    
