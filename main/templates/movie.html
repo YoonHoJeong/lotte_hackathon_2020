@@ -34,7 +34,8 @@
             {% csrf_token %}
             <input type="hidden" value={{movie.movie_id}} name="movieId">
             <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
-            <input type = "submit" value = "재개봉 응원해요">
+            <span><input type = "submit" value = "재개봉 응원해요"></span>
+            <span>{{ like_num }}개 ♥</span>
         </form>
     </div>
 
@@ -68,6 +69,15 @@
         <input  class="comment-submmit" type="submit" value = "작성">
     </form>
 
+    {% if user_like == -1 %}
+    <script>
+        alert("이미 좋아요를 누르셨습니다")
+    </script>
+    {% elif user_like == 1 %}
+    <script>
+        alert("의견이 등록되었습니다\n스크린에서 다시 만나길 바랍니다!")
+    </script>
+    {% endif %}
 
 </div>
 
