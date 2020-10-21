@@ -7,9 +7,7 @@
 {% endblock %}
 
 {% block subcontent %}
-<!-- <main class="search-main"> -->
 {% if search_list %}
-<!-- <div class="search-result-container"> -->
 
 <ul class="movie-list">
     <li class="movie-list-title">
@@ -43,8 +41,12 @@
     </li>
     {% endfor %}
 </ul>
-<!-- </div> -->
+{% else %}
+<div class="no-search-result">
+    <span class="search-term"></span> 
+    <span> 검색 결과가 없습니다</span>
+</div>
+
 {% endif %}
-<!-- </main> -->
 
 {% endblock %}

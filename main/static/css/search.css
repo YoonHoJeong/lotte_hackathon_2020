@@ -61,6 +61,7 @@
     place-items: stretch;
 
     padding: 0px 40px;
+    padding-bottom: 40px;
 
     margin-top: 40px;
 }
@@ -145,5 +146,15 @@
     background-color: rgba(0,0,0,1)
 }
 
+.no-search-result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-top : 50px;
+
+    font-size: 30px;
+    white-space:pre;
+}
 
 

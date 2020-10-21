@@ -13,58 +13,66 @@ BASE_URL = f"http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_
 
 # api 사용, 검색 결과 반환하는 함수
 def get_search_list(query):
+    """ 
+    검색 결과 내에 있는 영화들에서 필요한 정보만 추출
+    1. title - 영화 제목
+    2. poster - 영화 포스터, 없는 경우 많음.
+    3. plot - 줄거리, 100자 까지만 보여주도록
+    4. genre - 영화 장르, 쉼표(,)로 구분되어 있음.
+    5. runtime - 상영 시간, 분 단위
+    6. production_year - 제작년도
+    7. director - 감독
+    """
+
     search_list = []
+    movie_list = []
     max_plot_length = 100
 
     res = requests.get(BASE_URL + f"&title={query}").json()
 
     # 검색 결과로 나온 영화 리스트
-    result_list = res['Data'][0]['Result']
+    movie_list = res['Data'][0].get('Result')
+
     search_cnt = res['TotalCount']  # 검색 결과 개수
-    for movie in result_list:
+    if not movie_list:  
+        # 검색 결과가 없을 때
+        return [], 0
+    else:   
+        # 검색 결과가 있을 때
+        for movie in movie_list:
+            tmp_movie = {}
+            """ title parsing """
+            title = movie['titleEtc']
+            title_length = title.find("^")
+            title = title[:title_length].strip()
 
-        """ 
-        검색 결과 내에 있는 영화들에서 필요한 정보만 추출
-        1. title - 영화 제목
-        2. poster - 영화 포스터, 없는 경우 많음.
-        3. plot - 줄거리, 100자 까지만 보여주도록
-        4. genre - 영화 장르, 쉼표(,)로 구분되어 있음.
-        5. runtime - 상영 시간, 분 단위
-        6. production_year - 제작년도
-        7. director - 감독
-        """
+            """ poster parsing """
+            poster = movie['posters']
+            poster_idx = poster.find("|")
 
-        tmp_obj = {}
-        title = movie['titleEtc']
-        title_length = title.find("^")
-        title = title[:title_length].strip()
-        poster = movie['posters']
-        poster_idx = poster.find("|")
-        # idx = movie['DOCID']
-        movie_id = movie['movieId']
-        movie_seq = movie['movieSeq']
-        
-        plot = movie["plots"]['plot'][0]['plotText']
-        if len(plot) > max_plot_length:
-            plot = plot[:max_plot_length] + "..."
+            movie_id = movie['movieId']
+            movie_seq = movie['movieSeq']
+            
+            """ plot contraction """
+            plot = movie["plots"]['plot'][0]['plotText']
+            if len(plot) > max_plot_length:
+                plot = plot[:max_plot_length] + "..."
 
-        if poster_idx != -1:
-            poster = poster[:poster_idx]
+            if poster_idx != -1:
+                poster = poster[:poster_idx]
 
-        tmp_obj['title'] = title
-        tmp_obj['plot'] = plot
-        tmp_obj['genre'] = movie["genre"]
-        tmp_obj['runtime'] = movie["runtime"]
+            tmp_movie['title'] = title
+            tmp_movie['plot'] = plot
+            tmp_movie['genre'] = movie["genre"]
+            tmp_movie['runtime'] = movie["runtime"]
+            tmp_movie['poster'] = poster
+            tmp_movie['production_year'] = movie['prodYear']
+            tmp_movie['director'] = movie['directors']['director'][0]['directorNm']
+            tmp_movie['movie_id'] = movie_id
+            tmp_movie['movie_seq'] = movie_seq
 
-        tmp_obj['poster'] = poster
-        tmp_obj['production_year'] = movie['prodYear']
-        tmp_obj['director'] = movie['directors']['director'][0]['directorNm']
-        # tmp_obj['idx'] = idx 
-        tmp_obj['movie_id'] = movie_id
-        tmp_obj['movie_seq'] = movie_seq
-
-        search_list.append(tmp_obj)
-    return search_list, search_cnt
+            search_list.append(tmp_movie)
+        return search_list, search_cnt
 
 
 # Create your views here.
