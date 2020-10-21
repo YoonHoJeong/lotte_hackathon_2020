@@ -15,13 +15,17 @@ class Theme(models.Model):
 # 의견이 1개라도 작성된 Movie를 저장
 class Movie(models.Model):
     title = models.CharField(max_length=100)
-    theme = models.ManyToManyField(Theme)
+    theme = models.ManyToManyField(Theme, default=None)
     poster = models.ImageField(blank=False, null=True)
+
     genre = models.CharField(max_length=200)
     director = models.CharField(max_length=200)
     production_year = models.PositiveIntegerField()
     runtime = models.PositiveIntegerField()
     plot = models.TextField()
+
+    movie_id = models.CharField(max_length=200)
+    movie_seq = models.CharField(max_length=200)
 
     possible = models.BooleanField(default=False)    # 개봉 가능한지
     subrun = models.BooleanField(default=False)      # 이전에 개봉 했었는지
@@ -39,10 +43,10 @@ class VoteMovie(models.Model):
 # 의견글, 사용자, 영화, 생성된 시간이 기입됨.
 class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             on_delete=models.CASCADE)
+                             on_delete=models.CASCADE, blank=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 # 홈화면에서 투표, 투표수를 셀 때 사용.
