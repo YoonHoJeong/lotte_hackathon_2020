@@ -1,5 +1,7 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Count
+from django.shortcuts import render, redirect
+from .models import Movie, Comment, Theme
+from django.conf import settings
+from datetime import datetime
 import requests
 
 from .models import VoteMovie, Vote, Movie
@@ -23,15 +25,99 @@ def comment(request):
     return render(request, "comment.html", {'movies' : movies, "top_movies" : top_movies})
 
 def movie(request):
-    idx = ""
-    max_plot_length = 100
 
-    if request.method == "GET":
+    max_plot_length = 300
+    
+    comment_list = []
+
+    if request.method == "POST":
+        movie_id = request.POST.get('movieId')
+        movie_seq = request.POST.get('movieSeq')
+        comment = request.POST.get('comment')
+
+        movie_obj = Movie.objects.all() #현재 Movie model 전부 가져오기
+
+        if movie_obj.filter(movie_id = movie_id, movie_seq=movie_seq).exists() == False : 
+
+            res = requests.get(BASE_URL + f"&movieId={movie_id}&movieSeq={movie_seq}").json()
+
+            result_list = res['Data'][0]['Result']
+
+            for movie in result_list:
+
+                tmp_obj = {}
+                movie_title = movie['titleEtc']
+                title_length = movie_title.find("^")
+                movie_title = movie_title[:title_length].strip()
+                poster = movie['posters']
+                poster_idx = poster.find("|")
+
+                plot = movie["plots"]['plot'][0]['plotText']
+                if len(plot) > max_plot_length:
+                    plot = plot[:max_plot_length] + "..."
+
+                if poster_idx != -1:
+                    poster = poster[:poster_idx]
+
+                tmp_obj['title'] = movie_title
+                tmp_obj['plot'] = plot
+                tmp_obj['genre'] = movie["genre"]
+                tmp_obj['runtime'] = movie["runtime"]
+
+                tmp_obj['poster'] = poster
+                tmp_obj['production_year'] = movie['prodYear']
+                tmp_obj['director'] = movie['directors']['director'][0]['directorNm']
+                tmp_obj['movie_id'] = movie_id
+                tmp_obj['movie_seq'] = movie_seq
+                
+                break
+
+
+            movie_instance = Movie(title = tmp_obj['title'], genre =  tmp_obj['genre'], director = tmp_obj['director'], 
+            production_year = tmp_obj['production_year'], runtime = tmp_obj['runtime'], plot = tmp_obj['plot'], movie_id=movie_id, movie_seq=movie_seq)
+
+            movie_instance.save()
+            # 모든 요소 가져와서 Movie 모델 생성
+
+        selec_movie = movie_obj.filter(movie_id=movie_id, movie_seq=movie_seq)
+
+        tmp_obj = selec_movie[0]        
+
+        if comment :
+            comment_instance = Comment(user = request.user, movie = tmp_obj, content = comment)        
+            comment_instance.save()
+
+        comment_obj = Comment.objects.all()
+
+        for comment in comment_obj :
+
+            tmp_com_obj = {}
+
+            if comment.movie.movie_seq == movie_seq and comment.movie.movie_id == movie_id :
+                tmp_com_obj['created_at'] = comment.created_at
+                tmp_com_obj['user'] = comment.user
+                tmp_com_obj['content'] = comment.content
+
+                comment_list.append(tmp_com_obj)            
+
+    elif request.method == "GET":
         movie_id = request.GET.get('movieId')
         movie_seq = request.GET.get('movieSeq')
-        temp = BASE_URL + f"&movieId={movie_id}&movieSeq={movie_seq}"
 
-        res = requests.get(temp).json()
+        comment_obj = Comment.objects.all()
+
+        for comment in comment_obj :
+
+            tmp_com_obj = {}
+
+            if comment.movie.movie_seq == movie_seq and comment.movie.movie_id == movie_id :
+                tmp_com_obj['created_at'] = comment.created_at
+                tmp_com_obj['user'] = comment.user
+                tmp_com_obj['content'] = comment.content
+
+                comment_list.append(tmp_com_obj)
+
+        res = requests.get(BASE_URL + f"&movieId={movie_id}&movieSeq={movie_seq}").json()
 
         result_list = res['Data'][0]['Result']
 
@@ -43,9 +129,9 @@ def movie(request):
             movie_title = movie_title[:title_length].strip()
             poster = movie['posters']
             poster_idx = poster.find("|")
-            idx = movie['DOCID']
 
             plot = movie["plots"]['plot'][0]['plotText']
+            
             if len(plot) > max_plot_length:
                 plot = plot[:max_plot_length] + "..."
 
@@ -60,14 +146,14 @@ def movie(request):
             tmp_obj['poster'] = poster
             tmp_obj['production_year'] = movie['prodYear']
             tmp_obj['director'] = movie['directors']['director'][0]['directorNm']
-            #tmp_obj['idx'] = idx 
+            tmp_obj['movie_id'] = movie_id
+            tmp_obj['movie_seq'] = movie_seq
 
             break
     else:
-        # 검색어가 없는 경우, api 호출 x
         return redirect('comment')
 
-    return render(request, "movie.html", {"movie" : tmp_obj})
+    return render(request, "movie.html", {"movie" : tmp_obj, "comment_list" : comment_list})
 
 def search(request):
     # request -> response
