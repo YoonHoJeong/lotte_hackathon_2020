@@ -75,8 +75,17 @@ def movie(request):
                 break
 
 
-            movie_instance = Movie(title = tmp_obj['title'], genre =  tmp_obj['genre'], director = tmp_obj['director'], 
-            production_year = tmp_obj['production_year'], runtime = tmp_obj['runtime'], plot = tmp_obj['plot'], movie_id=movie_id, movie_seq=movie_seq)
+            movie_instance = Movie(
+                title = tmp_obj['title'], 
+                genre =  tmp_obj['genre'],
+                poster = tmp_obj['poster'],
+                director = tmp_obj['director'], 
+                production_year = tmp_obj['production_year'], 
+                runtime = tmp_obj['runtime'], 
+                plot = tmp_obj['plot'], 
+                movie_id=movie_id, 
+                movie_seq=movie_seq
+            )
 
             movie_instance.save()
             # 모든 요소 가져와서 Movie 모델 생성

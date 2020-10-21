@@ -2,20 +2,39 @@
 {% load static %}
 
 {% block title %}Comments{% endblock %}
-{% block link %}{% static 'css/comment.css' %}{% endblock %}
 
 {% block subcontent %}
 <!--Top Requsted Movie-->
-<div class>
+<ul class="movie-list">
+    <li class="movie-list-title">
+        <span class="search-term">투표 순위</span>
+    </li>
     {% for movie in top_movies %}
-    <a href = "{% url 'movie' %}">
-        <div class = "top_requested_movie">
-            <p><img src="{{ movie.poster.url }}" width="265" height="380" alt="Movie_Poster" ></p>
-            <h4>{{ movie.title }}</h4>
-            <h6>{{ movie.production_year }} | {{ movie.runtime }}분</h6>
-            <button type='button' class="btn">의견내기</button>
-        </div>
-    </a>
+    <li class="movie-item">
+        <form id="movie{{ forloop.counter }}-form" action="{% url 'movie' %}" method="GET">
+            {% csrf_token %}
+            <input type="hidden" value={{movie.movie_id}} name="movieId">
+            <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
+            <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
+                {% if movie.poster %}
+                <div class="movie-poster" style="background-image: url('{{movie.poster}}');"></div>
+                {% else %}
+                <div class="movie-poster no-image"></div>
+                {% endif %}
+            </a>
+            <div class="submit-input-box">
+                <div class="movie-info">
+                    <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
+                        <h3 class="movie-title">{{movie.title}}</h3>
+                    </a>
+                    <span class="movie-summary">{{movie.production_year}} | {{movie.runtime}}분</span>
+                </div>
+                <input class="submit-btn" type="submit" value="의견내기">
+            </div>
+
+
+        </form>
+    </li>
     {% endfor %}
-</div>
+</ul>
 {% endblock %}
