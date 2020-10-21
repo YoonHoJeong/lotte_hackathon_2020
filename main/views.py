@@ -66,7 +66,7 @@ def movie(request):
                 tmp_obj['director'] = movie['directors']['director'][0]['directorNm']
                 tmp_obj['movie_id'] = movie_id
                 tmp_obj['movie_seq'] = movie_seq
-                
+
                 break
 
 
