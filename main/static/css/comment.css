@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+  
+>>>>>>> yugyeom
 .top-movies {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -7,4 +11,8 @@
     padding: 0px 40px;
 
     margin-top: 40px;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> yugyeom

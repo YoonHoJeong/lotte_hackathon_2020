@@ -6,7 +6,7 @@ from datetime import datetime
 
 import requests
 
-from .models import VoteMovie, Vote, Movie
+from .models import VoteMovie, Vote, Movie, Comment, Like
 
 API_KEY = "1YJNU2R902583045L4Z6"
 BASE_URL = f"http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey={API_KEY}"
@@ -156,14 +156,13 @@ def enroll_movie_search(request):
     return render(request, 'enroll_movie.html', {'comment_movies':comment_movies, 'search_list': search_list, 'themes':themes})
 
 def comment(request):
-    movies = Movie.objects.all()
-    top_movies = Movie.objects.all().order_by('?')[:8]
-    return render(request, "comment.html", {'movies' : movies, "top_movies" : top_movies})
+    top_movies = Movie.objects.all().order_by('num_like')[:8]
+    return render(request, "comment.html", {"top_movies" : top_movies})
 
 def movie(request):
 
-    max_plot_length = 300
-    
+    max_plot_length = 300    
+    user_like = 0
     comment_list = []
 
     if request.method == "POST":
@@ -205,9 +204,8 @@ def movie(request):
                 tmp_obj['director'] = movie['directors']['director'][0]['directorNm']
                 tmp_obj['movie_id'] = movie_id
                 tmp_obj['movie_seq'] = movie_seq
-                
-                break
 
+                break
 
             movie_instance = Movie(
                 title = tmp_obj['title'], 
@@ -231,6 +229,20 @@ def movie(request):
         if comment :
             comment_instance = Comment(user = request.user, movie = tmp_obj, content = comment)        
             comment_instance.save()
+        else :
+
+            like_obj = Like.objects.all()
+
+            user_like = 1
+
+            for like in like_obj :
+                if like.movie.movie_id == movie_id and like.movie.movie_seq == movie_seq and like.user == request.user :
+                    user_like = -1
+
+            if user_like == 1:
+                like_instance = Like(movie=tmp_obj, user=request.user)
+                like_instance.save()      
+                tmp_obj.num_like += 1
 
         comment_obj = Comment.objects.all()
 
@@ -295,10 +307,20 @@ def movie(request):
             tmp_obj['movie_seq'] = movie_seq
 
             break
+
     else:
         return redirect('comment')
 
-    return render(request, "movie.html", {"movie" : tmp_obj, "comment_list" : comment_list})
+    like_obj = Like.objects.all()
+
+    like_num = 0
+
+    for like in like_obj :
+        if like.movie.movie_id == movie_id and like.movie.movie_seq == movie_seq :
+            like_num += 1
+
+
+    return render(request, "movie.html", {"movie" : tmp_obj, "comment_list" : comment_list, "like_num" : like_num, 'user_like' : user_like})
 
 
 def search(request):

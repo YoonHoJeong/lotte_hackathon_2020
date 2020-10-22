@@ -23,12 +23,13 @@ class Movie(models.Model):
     production_year = models.PositiveIntegerField()
     runtime = models.PositiveIntegerField()
     plot = models.TextField()
-
     movie_id = models.CharField(max_length=200)
     movie_seq = models.CharField(max_length=200)
 
     possible = models.BooleanField(default=False)    # 개봉 가능한지
-    subrun = models.BooleanField(default=False)      # 이전에 개봉 했었는지
+    subrun = models.BooleanField(default=False)      # 이전에 개봉 했었는
+    
+    num_like = models.PositiveIntegerField(default=0)
 
     @classmethod
     def create(cls, movie_obj):
@@ -69,6 +70,12 @@ class Comment(models.Model):
 
 # 홈화면에서 투표, 투표수를 셀 때 사용.
 class Vote(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+
+# 영화상세 화면에서 좋아요 수를 셀 때 사용.
+class Like(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
