@@ -30,9 +30,9 @@
 
     {% for votemovie in votemovies %}
         <div class="votemovie">
-            {% if movie.poster %}
+            {% if votemovie.movie.poster %}
             <div class="movie-poster">
-                <img src="{{ votemovie.movie.poster.url }}">
+                <img src="{{ votemovie.movie.poster }}">
             </div>
             {% else %}
                 <div class="no-image">
@@ -44,13 +44,12 @@
                 <div class="movie-info">
                     <h3 class="movie-title">{{ votemovie.movie.title }}</h3>
 
-                    {% for result in results %}
-                    <h5> {{ result }} </h5>  
-                    {% endfor %}                 
+                    <h5> {{ votemovie.vote_num }}표 </h5>               
 
                     <form action="{% url 'vote' %}" method="POST">
                         {% csrf_token %}
-                        <button name="votemovie" value="{{ votemovie.movie.id }}" class="submit-btn" type="submit">투표하기</button>
+                        <input type="hidden" value="{{ votemovie.id }}" name="votemovie_id">
+                        <button name="movie_id" value="{{ votemovie.movie.id }}" class="submit-btn" type="submit">투표하기</button>
                     </form>
                 </div>
             </div>

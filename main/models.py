@@ -54,6 +54,7 @@ class Movie(models.Model):
 class VoteMovie(models.Model):
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    vote_num = models.PositiveIntegerField(default = 0)
 
     def __str__(self):
         return self.movie.title + " / " + self.theme.title

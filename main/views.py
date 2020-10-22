@@ -85,9 +85,8 @@ def isSavedMovie(movie, movie_id, movie_seq):
 
 def home(request):
     votemovies = VoteMovie.objects.all()
-    results = Vote.objects.values('movie_id').annotate(count=Count('movie_id'))
-    total = Vote.objects.all().count()
-    return render(request, "home.html", {'votemovies' : votemovies, 'results' : results})
+
+    return render(request, "home.html", {'votemovies' : votemovies})
 
 def enroll_movie(request):
     themes = Theme.objects.all()
@@ -235,10 +234,9 @@ def movie(request):
 
             user_like = 1
 
-            for like in like_obj :
-                if like.movie.movie_id == movie_id and like.movie.movie_seq == movie_seq and like.user == request.user :
-                    user_like = -1
-
+            if like_obj.filter(movie_id = movie_id, movie_seq=movie_seq).exists() == True :
+                user_like = -1
+ 
             if user_like == 1:
                 like_instance = Like(movie=tmp_obj, user=request.user)
                 like_instance.save()      
@@ -345,13 +343,32 @@ def search(request):
 
 def vote(request):
     if request.method == 'POST':
-        vote = Vote()
-        vote.user_id = request.user.id
-        vote.movie_id = request.POST['votemovie']
-   
-        vote.save()
 
-        return redirect('home')
+        vote_objs = Vote.objects.all()
+        votemovie_id = request.POST['votemovie_id']
+        movie_id = request.POST['movie_id']
+        movie_obj = Movie.objects.get(pk=movie_id)
+        vote_movie = VoteMovie.objects.get(pk=votemovie_id)
+
+        if vote_objs.exists() == True :
+            if vote_objs.all().filter(movie = movie_obj, user = request.user).exists() == False :
+                vote = Vote()
+                vote.user = request.user
+                vote.movie = movie_obj            
+                vote_movie.vote_num = vote_movie.vote_num + 1
+                vote.save()
+                vote_movie.save()
+        else :
+            vote = Vote()
+            vote.user = request.user
+            vote.movie = movie_obj
+            vote_movie.vote_num = vote_movie.vote_num + 1
+            vote.save()
+            vote_movie.save()
+
+        votemovies = VoteMovie.objects.all()
+
+        return render(request, "home.html", {'votemovies' : votemovies})
 
 
 
