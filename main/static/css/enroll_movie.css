@@ -19,7 +19,7 @@
 
 }
 
-.enroll-form {
+.enroll-form, .alert-form  {
     width: 350px;
     height: 200px;
     background-color: white;
@@ -61,6 +61,8 @@
     height: 30px;
     font-size: 15px;
     border-radius: 15px;
+
+    outline: none;
 }
 .small-btn:nth-last-child(1) {
     margin-left: 10px;
@@ -76,7 +78,7 @@
     color: white;
 }
 
-.cancel-btn {
+.cancel-btn, .yes-btn {
     background-color: #2E2E2E;
     color: white;
 }
@@ -89,6 +91,11 @@
 
 }
 
-option {
-    padding: 10px;
+.alert-form {
+    display: none;
+}
+
+.alert-form .form-title {
+    justify-self: center;
+    align-self: center;
 }

@@ -48,7 +48,7 @@
             {% csrf_token %}
             <input type="hidden" value={{movie.movie_id}} name="movieId">
             <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
-            <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
+            <a href="{% url 'movie' %}">
                 {% if movie.poster %}
                 <div class="movie-poster" style="background-image: url('{{movie.poster}}');"></div>
                 {% else %}
@@ -115,7 +115,7 @@
         </div>
 
         <div class="form-title">
-            해리포터
+            
         </div>
         <select class="themes-container" name="dropdown" id="">
             {% for theme in themes %}
@@ -130,6 +130,19 @@
             <button class="cancel-btn small-btn">취소</button>
         </div>
     </form>
+    <div class="alert-form">
+        {% csrf_token %}
+
+        <div class="logo-container">
+            <img class="logo" src="{% static 'images/lotte-icon.jpg' %}" alt="롯데 시네마">
+        </div>
+        <div class="form-title">
+            등록이 완료되었습니다.
+        </div>
+        <div class="btns-container">
+            <button class="yes-btn small-btn">확인</button>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

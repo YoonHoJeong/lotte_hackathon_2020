@@ -30,6 +30,8 @@ var wheelOpt = supportsPassive ? {
     passive: false
 } : false;
 
+
+
 var wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
 
 // call this to Disable
@@ -54,13 +56,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const enrollFormBG = document.querySelector(".enroll-form-background");
     const confirmBtn = enrollForm.querySelector(".confirm-btn");
     const cancelBtn = enrollForm.querySelector(".cancel-btn");
+    const alertForm = enrollFormBG.querySelector(".alert-form");
+    const yesBtn = alertForm.querySelector('.yes-btn');
 
     const inputmovieId = enrollForm.querySelector("#movie-id")
     const inputmovieSeq = enrollForm.querySelector("#movie-seq")
 
     let movieTitle, movieId, movieSeq;
 
-    console.log(cancelBtn);
+    $('.enrollForm').submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: 'submit.php',
+            data: $(this).serialize(),
+            error: function () {
+                alert("Request Failed");
+            },
+            success: function (response) {
+                //EXECUTE ANIMATION HERE
+            } // this was missing
+        });
+
+    })
+
     cancelBtn.addEventListener("click", (e) => {
         e.preventDefault();
         enableScroll();
@@ -68,14 +87,14 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     cancelBtn.addEventListener("submit", (e) => {
         e.preventDefault();
-        
+
     })
 
     enrollBtns.forEach(enrollBtn => {
         enrollBtn.addEventListener("click", (e) => {
             e.preventDefault();
             disableScroll();
-
+            enrollForm.style.display = 'flex';
             const myForm = e.target.parentNode.parentNode;
             movieTitle = myForm.querySelector(".movie-title").innerText;
             let inputs = myForm.querySelectorAll("input");
@@ -97,11 +116,20 @@ document.addEventListener("DOMContentLoaded", () => {
         })
     })
     confirmBtn.addEventListener('click', (e) => {
-        enrollFormBG.style.display = 'none';
-        enableScroll();
+        e.preventDefault();
+        enrollForm.style.display = 'none';
+        alertForm.style.display = 'flex';
+
         inputmovieId.value = movieId;
         inputmovieSeq.value = movieSeq;
 
-        enrollForm.submit();
+        var res = enrollForm.submit();
+        console.log(res);
+    })
+    confirmBtn.addEventListener('submit', (e) => {})
+    yesBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        enrollFormBG.style.display = 'none';
+        alertForm.style.display = 'none';
     })
 });
