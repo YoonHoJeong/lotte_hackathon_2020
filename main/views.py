@@ -107,7 +107,7 @@ def enroll_movie(request):
 
 def enroll_movie_search(request):
     search_list = []
-
+    themes = Theme.objects.all()
     if request.method == "GET":
         comment_movies = Movie.objects.all()
         query = request.GET['query']
@@ -118,7 +118,7 @@ def enroll_movie_search(request):
         else:
             return redirect('enroll_movie')
 
-    return render(request, 'enroll_movie.html', {'comment_movies':comment_movies, 'search_list': search_list})
+    return render(request, 'enroll_movie.html', {'comment_movies':comment_movies, 'search_list': search_list, 'themes':themes})
 
 def comment(request):
     movies = Movie.objects.all()

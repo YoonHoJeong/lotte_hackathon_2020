@@ -108,10 +108,15 @@
 <div class="enroll-form-background">
     <form method="POST" action="{% url 'enroll_movie' %}" class="enroll-form">
         {% csrf_token %}
-        <div class="form-title">
 
+        <div class="logo-container">
+            <img class="logo" src="{% static 'images/lotte-icon.jpg' %}" alt="롯데 시네마">
         </div>
-        <select name="" id="">
+
+        <div class="form-title">
+            해리포터
+        </div>
+        <select class="themes-container" name="" id="">
             {% for theme in themes %}
             <option value={{theme.title}}>{{theme.title}}</option>
             {% endfor %}
@@ -119,7 +124,10 @@
         <input id="movie-id" type="hidden" value="" name="movieId">
         <input id="movie-seq" type="hidden" value="" name="movieSeq">
 
-        <button class="confirm-btn">등록하기</button>
+        <div class="btns-container">
+            <button class="confirm-btn small-btn">등록</button>
+            <button class="cancel-btn small-btn">취소</button>
+        </div>
     </form>
 </div>
 
