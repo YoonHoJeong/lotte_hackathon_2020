@@ -125,25 +125,10 @@
     align-items: center;
 }
 .submit-btn {
-    border: none;
-    background-color: #D44242;
-    border-radius: 17px;
-    margin-top: 5px;
-    color: white;
-    font-size: 0.9rem;
 
-    text-align: center;
-
-    width: 5rem;
-
-    padding: 6px 8px;
-
-    outline: none;
-    cursor: pointer;
 }
 
 .submit-btn:hover {
-    background-color: rgba(0,0,0,1)
 }
 
 .no-search-result {

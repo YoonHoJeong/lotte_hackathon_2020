@@ -12,7 +12,7 @@ API_KEY = "1YJNU2R902583045L4Z6"
 BASE_URL = f"http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey={API_KEY}"
 
 # api 사용, 검색 결과 반환하는 함수
-def get_search_list(query):
+def get_search_list(queries):
     """ 
     검색 결과 내에 있는 영화들에서 필요한 정보만 추출
     1. title - 영화 제목
@@ -27,8 +27,12 @@ def get_search_list(query):
     search_list = []
     movie_list = []
     max_plot_length = 100
+    query = ""
 
-    res = requests.get(BASE_URL + f"&title={query}").json()
+    for query_name, query_content in queries.items():
+        query += f"&{query_name}={query_content}"
+
+    res = requests.get(BASE_URL + query).json()
 
     # 검색 결과로 나온 영화 리스트
     movie_list = res['Data'][0].get('Result')
@@ -74,6 +78,8 @@ def get_search_list(query):
             search_list.append(tmp_movie)
         return search_list, search_cnt
 
+def isSavedMovie(movie, movie_id, movie_seq):
+    return movie.movie_id == movie_id and movie.movie_seq == movie_seq
 
 # Create your views here.
 
@@ -85,24 +91,54 @@ def home(request):
 
 def enroll_movie(request):
     themes = Theme.objects.all()
+    comment_movies = Movie.objects.all()
 
     if not request.user.is_staff:
         return redirect("home")
 
     if request.method == "GET":
-        comment_movies = Movie.objects.all()
-
         return render(request, "enroll_movie.html", {'comment_movies':comment_movies, 'themes':themes})
     
     elif request.method == "POST":
         # '등록하기' 버튼을 눌렀을 때
         # vote_movie_instance = VoteMovie()
-        print(request.POST.get("movieId"))
-        print(request.POST.get("movieSeq"))
+        movie_id = request.POST.get("movieId")
+        movie_seq = request.POST.get("movieSeq")
+        theme_id = request.POST.get("dropdown")
 
-        # 해당 영화가 Movie 리스트에 있으면 그대로 작성
+        movie = [movie for movie in comment_movies if isSavedMovie(movie, movie_id, movie_seq)]
+
+        theme = get_object_or_404(Theme, id=theme_id)
+
+
+        if movie:
+            movie = movie[0]
+
+            # 해당 영화가 Movie 리스트에 있으면 그대로 작성
+            vote_movie = VoteMovie.objects.filter(theme__id=theme.id, movie__id = movie.id)
+
+            if not vote_movie:
+                # 이미 같은 테마의 영화가 vote_movie에 저장되어 있지 않을 때만
+                
+                vote_movie = VoteMovie()
+                vote_movie.theme = theme
+                vote_movie.movie = movie
+                vote_movie.save()
+            else:
+                print("이미 같은 vote movie가 있어요")
+        else:
+            movie_obj = get_search_list({'movieId':movie_id, 'movieSeq':movie_seq})[0][0]
+            movie = Movie.create(movie_obj)
+            movie.save()
+
+            vote_movie = VoteMovie()
+            vote_movie.theme = theme
+            vote_movie.movie = movie
+            vote_movie.save()
+            # movie.save()
 
         # 해당 영화가 Movie 리스트에 없으면 새로 Movie 생성
+        # movie = get_search_list({"movieId":movie_id, "movieSeq":movie_seq})
     return redirect('enroll_movie')
 
 def enroll_movie_search(request):
@@ -111,10 +147,9 @@ def enroll_movie_search(request):
     if request.method == "GET":
         comment_movies = Movie.objects.all()
         query = request.GET['query']
-        print(request)
+
         if query:
-            print(query)    
-            search_list, search_cnt = get_search_list(query)
+            search_list, search_cnt = get_search_list({'title':query})
         else:
             return redirect('enroll_movie')
 
@@ -277,7 +312,7 @@ def search(request):
         query = request.GET['query']
         if query:
             # 사용자가 검색어를 입력했을 때,
-            search_list, search_cnt = get_search_list(query)
+            search_list, search_cnt = get_search_list({'title':query})
             # 제목 단위로 검색.
         else:
             # 검색어가 없는 경우, api 호출 x

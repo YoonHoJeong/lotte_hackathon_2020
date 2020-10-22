@@ -63,18 +63,18 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(cancelBtn);
     cancelBtn.addEventListener("click", (e) => {
         e.preventDefault();
+        enableScroll();
         enrollFormBG.style.display = 'none';
     })
     cancelBtn.addEventListener("submit", (e) => {
         e.preventDefault();
+        
     })
 
     enrollBtns.forEach(enrollBtn => {
         enrollBtn.addEventListener("click", (e) => {
             e.preventDefault();
             disableScroll();
-
-            console.log(e);
 
             const myForm = e.target.parentNode.parentNode;
             movieTitle = myForm.querySelector(".movie-title").innerText;
@@ -98,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     confirmBtn.addEventListener('click', (e) => {
         enrollFormBG.style.display = 'none';
+        enableScroll();
         inputmovieId.value = movieId;
         inputmovieSeq.value = movieSeq;
 

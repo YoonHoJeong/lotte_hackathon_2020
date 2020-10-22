@@ -37,40 +37,6 @@
     </form>
 </div>
 
-
-{% if comment_movies %}
-<ul class="movie-list">
-    <li class="movie-list-title">
-        이번달 의견내기 영화 순위
-        <!-- <span class="search-term"></span>  -->
-    </li>
-    {% for movie in comment_movies %}
-    <li class="movie-item">
-        <form id="movie{{ forloop.counter }}-form" action="{% url 'enroll_movie' %}" method="POST">
-            {% csrf_token %}
-            <input type="hidden" value={{movie.movie_id}} name="movieId">
-            <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
-            <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
-                {% if movie.poster %}
-                <div class="movie-poster" style="background-image: url('{{movie.poster}}');"></div>
-                {% else %}
-                <div class="movie-poster no-image"></div>
-                {% endif %}
-            </a>
-            <div class="submit-input-box">
-                <div class="movie-info">
-                    <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
-                        <h3 class="movie-title">{{movie.title}}</h3>
-                    </a>
-                    <span class="movie-summary">{{movie.production_year}} | {{movie.runtime}}분</span>
-                </div>
-                <input class="enroll-btn red-btn" type="submit" value="등록하기"/>
-            </div>
-        </form>
-    </li>
-    {% endfor %}
-</ul>
-{% endif %}
 {% if search_list %}
 <ul class="movie-list">
     <li class="movie-list-title">
@@ -105,6 +71,41 @@
     {% endfor %}
 </ul>
 {% endif %}
+
+{% if comment_movies %}
+<ul class="movie-list">
+    <li class="movie-list-title">
+        이번달 의견내기 영화 순위
+        <!-- <span class="search-term"></span>  -->
+    </li>
+    {% for movie in comment_movies %}
+    <li class="movie-item">
+        <form id="movie{{ forloop.counter }}-form" action="{% url 'enroll_movie' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" value={{movie.movie_id}} name="movieId">
+            <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
+            <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
+                {% if movie.poster %}
+                <div class="movie-poster" style="background-image: url('{{movie.poster}}');"></div>
+                {% else %}
+                <div class="movie-poster no-image"></div>
+                {% endif %}
+            </a>
+            <div class="submit-input-box">
+                <div class="movie-info">
+                    <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
+                        <h3 class="movie-title">{{movie.title}}</h3>
+                    </a>
+                    <span class="movie-summary">{{movie.production_year}} | {{movie.runtime}}분</span>
+                </div>
+                <input class="enroll-btn red-btn" type="submit" value="등록하기"/>
+            </div>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 <div class="enroll-form-background">
     <form method="POST" action="{% url 'enroll_movie' %}" class="enroll-form">
         {% csrf_token %}
@@ -116,9 +117,9 @@
         <div class="form-title">
             해리포터
         </div>
-        <select class="themes-container" name="" id="">
+        <select class="themes-container" name="dropdown" id="">
             {% for theme in themes %}
-            <option value={{theme.title}}>{{theme.title}}</option>
+            <option value={{theme.id}}>{{theme.title}}</option>
             {% endfor %}
         </select>
         <input id="movie-id" type="hidden" value="" name="movieId">
