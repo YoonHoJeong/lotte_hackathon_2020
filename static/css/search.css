@@ -61,7 +61,6 @@
     place-items: stretch;
 
     padding: 0px 40px;
-    padding-bottom: 40px;
 
     margin-top: 40px;
 }
@@ -125,21 +124,26 @@
     align-items: center;
 }
 .submit-btn {
+    border: none;
+    background-color: #D44242;
+    border-radius: 17px;
+    margin-top: 5px;
+    color: white;
+    font-size: 0.9rem;
 
+    text-align: center;
+
+    width: 5rem;
+
+    padding: 6px 8px;
+
+    outline: none;
+    cursor: pointer;
 }
 
 .submit-btn:hover {
+    background-color: rgba(0,0,0,1)
 }
 
-.no-search-result {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    margin-top : 50px;
-
-    font-size: 30px;
-    white-space:pre;
-}
 
 

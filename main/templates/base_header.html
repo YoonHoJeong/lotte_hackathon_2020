@@ -25,7 +25,7 @@
                 <a href="{% url 'home' %}">투표하기</a>
             </div>
             <div class="nav-col">
-                <a href="{% url 'home' %}">
+                <a href="https://www.lottecinema.co.kr/NLCHS">
                     <img class="logo" src="{% static 'images/lotte-icon.jpg' %}" alt="롯데 시네마">
                 </a>
             </div>
@@ -43,10 +43,6 @@
                 {% endif %}
             </div>
         </nav>
-        <div class="theme-box">
-            <div class="theme-month">{% block theme-month %} {% endblock %}</div>
-            <div class="theme-title">{% block theme-title %} {% endblock %}</div>
-        </div>
     </header>
 
     {% block content %}

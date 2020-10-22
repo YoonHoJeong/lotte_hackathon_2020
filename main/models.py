@@ -15,8 +15,9 @@ class Theme(models.Model):
 # 의견이 1개라도 작성된 Movie를 저장
 class Movie(models.Model):
     title = models.CharField(max_length=100)
-    theme = models.ManyToManyField(Theme)
+    theme = models.ManyToManyField(Theme, default=None)
     poster = models.ImageField(blank=False, null=True)
+
     genre = models.CharField(max_length=200)
     director = models.CharField(max_length=200)
     production_year = models.PositiveIntegerField()
@@ -30,6 +31,21 @@ class Movie(models.Model):
     
     num_like = models.PositiveIntegerField(default=0)
 
+    @classmethod
+    def create(cls, movie_obj):
+        return cls(
+            title= movie_obj.get('title'), 
+            poster= movie_obj.get('poster'), 
+            genre= movie_obj.get('genre'), 
+            director= movie_obj.get('director'), 
+            production_year= movie_obj.get('production_year'), 
+            runtime= movie_obj.get('runtime'), 
+            plot= movie_obj.get('plot'), 
+            movie_id= movie_obj.get('movie_id'), 
+            movie_seq= movie_obj.get('movie_seq')
+        )
+
+
     def __str__(self):
         return self.title
 
@@ -38,6 +54,9 @@ class Movie(models.Model):
 class VoteMovie(models.Model):
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.movie.title + " / " + self.theme.title
 
 
 # 의견글, 사용자, 영화, 생성된 시간이 기입됨.

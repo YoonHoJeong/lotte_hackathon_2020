@@ -17,7 +17,13 @@
 {% block content %}
 
 
-<body>
+<body class="home-body">
+    {% if user.is_staff %}
+    <a href="/enroll_movie">
+        <button class="add-vote-movie-btn">투표 리스트 추가</button>
+    </a>
+    {% endif %}
+
     <div class="titlebox">
     <h2>투표하기</h2>
     </div>
