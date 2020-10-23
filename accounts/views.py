@@ -18,7 +18,8 @@ def login_view(request):
             login(request, user)
             return redirect('/')
         else:
-            return redirect('/')
+            err_msg = "아이디 혹은 비밀번호를 확인해주세요"
+            return render(request, 'login.html', {'err_msg': err_msg})
     else:
         return render(request, 'login.html')
 

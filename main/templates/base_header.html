@@ -15,6 +15,9 @@
     {% endblock %}
 
     {% block js %}
+    {% if err_msg %}
+    <script>alert('{{err_msg}}')</script>
+    {% endif %}
     {% endblock %}
 </head>
 
