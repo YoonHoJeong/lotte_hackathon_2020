@@ -1,4 +1,4 @@
-body{
+body {
     background-color: black;
 }
 
@@ -9,7 +9,9 @@ body{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    }
+
+    position: relative;
+}
 
 h2 {
     font-size: 30px;
@@ -27,7 +29,8 @@ h2 {
     flex-direction: column;
 }
 
-.movie-poster, .movie-item {
+.movie-poster,
+.movie-item {
     width: 100%;
     padding-top: 141%;
     border-radius: 5px;
@@ -91,12 +94,23 @@ h2 {
 }
 
 /* 정윤호 추가 */
-.home-main {
+.home-body {
     position: relative;
 }
 
-.add-vote-movie-btn {
+.link-box {
     position: absolute;
-    top: 0px;
-    right: 0px;
+    top: 10px;
+    right: 10px;
+
+    display: flex;
+}
+
+.add-vote-movie-btn {
+    width:fit-content;
+    background-color: #2E2E2E;
+}
+
+.link-enroll {
+    padding-left: auto;
 }

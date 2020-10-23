@@ -4,6 +4,8 @@ from .models import Movie, Comment, Theme
 from django.conf import settings
 from datetime import datetime
 
+from django.contrib.auth.decorators import login_required
+
 import requests
 
 from .models import VoteMovie, Vote, Movie, Comment, Like
@@ -342,7 +344,7 @@ def search(request):
 
     return render(request, "search.html", {"search_list": search_list, "search_cnt": search_cnt})
 
-
+@login_required(login_url='/login/')
 def vote(request):
     if request.method == 'POST':
 

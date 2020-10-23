@@ -148,3 +148,52 @@ body {
     margin-right: 10px;
     text-decoration: underline;
 }
+
+.red-btn {
+    border: none;
+    background-color: #D44242;
+    border-radius: 17px;
+    margin-top: 5px;
+    color: white;
+    font-size: 0.9rem;
+
+    text-align: center;
+
+    width: 5rem;
+
+    padding: 6px 8px;
+
+    outline: none;
+    cursor: pointer;
+}
+
+.red-btn:hover {
+    opacity: 0.7;
+}
+
+.btn {
+    border: none;
+    border-radius: 17px;
+    margin-top: 5px;
+    color: white;
+    font-size: 0.9rem;
+
+    text-align: center;
+
+    width: 5rem;
+
+    padding: 6px 8px;
+
+    outline: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.grey-btn {
+    background-color: #2E2E2E;
+    color: white;
+}
