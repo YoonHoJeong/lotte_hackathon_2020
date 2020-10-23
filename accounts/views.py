@@ -1,8 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from .forms import UserForm
 
 # Create your views here.
 
+
+def select_signup(request):
+    return render(request, 'select_signup.html')
 
 def login_view(request):
     if request.method == 'POST':
@@ -21,3 +26,24 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('/')
+
+def signup_view(request, user_type):
+    if request.method == "POST":
+        # method가 post 일 때
+        form = UserForm(request.POST)
+
+        if form.is_valid(): #2
+            new_user = User.objects.create_user(**form.cleaned_data) #5
+            
+            if user_type == "staff":
+                new_user.is_staff = True
+                new_user.save()
+            
+            login(request, new_user)
+            return redirect('home')
+        else:
+            return redirect('signup_view')
+
+    else:
+        # method가 get 일 때
+        return render(request, "signup.html")

@@ -1,0 +1,23 @@
+{% extends 'base_header.html' %}
+{% load static %}
+
+{% block title %}
+login
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}">
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="signup-main">
+    <div class="select-form">
+        <h1 class="form-title">어떤 계정으로 가입하시나요?</h1>
+        <div class="select-btns-container">
+            <a class= "btn select-btn" href="{% url 'signup_view' user_type='staff' %}">관리자</a>
+            <a class= "btn select-btn normal-select-btn" href="{% url 'signup_view' user_type='normal' %}">일반 회원</a>
+        </div>
+    </div>
+</main>
+{% endblock %}

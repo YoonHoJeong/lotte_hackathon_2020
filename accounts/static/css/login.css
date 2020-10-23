@@ -31,9 +31,7 @@
 
 .login-field {
     display: flex;
-
     margin-top: 20px;
-
 }
 
 .login-info {
@@ -70,13 +68,4 @@
 .login-btn:hover {
     opacity: 0.7;
     cursor: pointer;
-}
-
-.input__name {
-
-
-}
-
-.input__pwd {
-
 }
