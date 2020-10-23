@@ -84,7 +84,7 @@ class Comment(models.Model):
 class Vote(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    vote_movie = models.ForeignKey(VoteMovie, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.user.username + " / " + self.movie.title

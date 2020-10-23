@@ -374,22 +374,23 @@ def vote(request):
     if request.method == 'POST':
 
         vote_objs = Vote.objects.all()
-        votemovie_id = request.POST['votemovie_id']
-        movie_id = request.POST['movie_id']
-        movie_obj = Movie.objects.get(pk=movie_id)
+        votemovie_id = request.POST.get('votemovie_id')
         vote_movie = VoteMovie.objects.get(pk=votemovie_id)
 
-        is_already_vote = Vote.objects.filter(movie = movie_obj, user = request.user)
+        movie_id = vote_movie.movie.id
+
+        movie_obj = Movie.objects.get(pk=movie_id)
+
+        is_already_vote = Vote.objects.filter(vote_movie = vote_movie, user = request.user)
 
         if is_already_vote:
             # 이미 투표했을 때
-            vote_status = True
             return redirect("/?is_voted=1")
         else:
             # 투표를 안 했을 때
             vote = Vote()
             vote.user = request.user
-            vote.movie = movie_obj            
+            vote.vote_movie = vote_movie            
             vote_movie.vote_num = vote_movie.vote_num + 1
             vote.save()
             vote_movie.save()

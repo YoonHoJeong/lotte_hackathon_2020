@@ -15,6 +15,9 @@
     const urlParams = new URLSearchParams(window.location.search);
     const is_voted = urlParams.get('is_voted');
     const deleteFlag = urlParams.get('delete');
+
+    console.log(deleteFlag);
+
     if (is_voted === "1") {
         alert("이미 투표한 영화입니다.");
         window.location.replace("/");
@@ -26,7 +29,7 @@
     if (deleteFlag === "1") {
         alert("삭제가 완료되었습니다.");
         window.location.replace("/");
-    } else if (is_voted === "0") {
+    } else if (deleteFlag === "0") {
         alert("삭제되지 않았습니다.");
         window.location.replace("/");
     }
@@ -51,12 +54,14 @@
         </div>
         {% endif %}
 
+
+        {% if votemovies %}
         <div class="titlebox">
             <h2>투표하기</h2>
             <h3 class="subtitle">{{theme.month}}월, 극장에서 보고 싶은 영화에 투표해주세요</h3>
         </div>
-
         <ul class="vote-movie-list">
+            
             {% for votemovie in votemovies %}
             <li class="vote-movie-item">
                 <div class="movie-ranking">
@@ -64,8 +69,6 @@
                 </div>
                 {% if votemovie.movie.poster %}
                 <div class="movie-poster" style="background-image: url('{{votemovie.movie.poster}}');">
-                    
-
                     <div class="poster-fg">
                         <h3 class="movie-title">{{ votemovie.movie.title }}</h3>
 
@@ -94,6 +97,9 @@
             </li>
             {% endfor %}
         </ul>
+        {% else %}
+        <div class="no-vote-list">등록된 영화가 없습니다.</div>
+        {% endif %}
     </div>
 </body>
 

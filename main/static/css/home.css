@@ -8,6 +8,7 @@
     background-color: black;
 
     position: relative;
+    height: 100%;
 
     padding: 100px;
 }
@@ -44,14 +45,19 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-
+    
     width: 100%;
     /* max-width: 1100px; */
-
+    
     padding-bottom: 40px;
     margin-top: 100px;
 }
+.vote-container .no-vote-list{
+    font-size: 45px;
+    font-weight: 700;
 
+    color: white;
+}
 .vote-movie-item {
     position: relative;
     margin: 10px;
