@@ -11,18 +11,18 @@
 
 {% block js %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script>    
+<script>
     const urlParams = new URLSearchParams(window.location.search);
     const is_voted = urlParams.get('is_voted');
     if (is_voted === "1") {
-        alert("해당 영화는 이미 투표하셨습니다!");
+        alert("이미 투표한 영화입니다.");
         window.location.replace("/");
     } else if (is_voted === "0") {
-        alert("투표가 완료되었습니다!");
+        alert("투표되었습니다.");
         window.location.replace("/");
     }
-    
 </script>
+<script src="{% static 'js/home.js' %}"></script>
 {% endblock %}
 
 {% block theme-month %} {{theme.month}}월, {% endblock %}
@@ -32,45 +32,48 @@
 
 
 <body class="home-body">
-    <div class="titlebox">
-        <h2>투표하기</h2>
+
+    <div class="vote-container">
         {% if user.is_staff %}
-        <div class="link-box">
-            <a class="link-enroll" href="/enroll_movie">
-                <button class="btn add-vote-movie-btn">투표 리스트 추가하기 </button>
-            </a>
-        </div>
-        {% endif %}
-    </div>
-
-    {% for votemovie in votemovies %}
-    <div class="votemovie">
-        {% if movie.poster %}
-        <div class="movie-poster">
-            <img src="{{ votemovie.movie.poster.url }}">
-        </div>
-        {% else %}
-        <div class="no-image">
-            <img src="{% static 'images/noImage.gif' %}">
-        </div>
-        {% endif %}
-
-        <div class="submit-input-box">
-            <div class="movie-info">
-                <h3 class="movie-title">{{ votemovie.movie.title }}</h3>
-
-                <h5> {{ votemovie.vote_num }}표 </h5>
-
-                <form action="{% url 'vote' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" value="{{ votemovie.id }}" name="votemovie_id">
-                    <button name="movie_id" value="{{ votemovie.movie.id }}" class="submit-btn"
-                        type="submit">투표하기</button>
-                </form>
+            <div class="link-box">
+                <a class="link-enroll" href="/enroll_movie">
+                    <button class="btn add-vote-movie-btn">투표 리스트 추가하기 </button>
+                </a>
             </div>
+        {% endif %}
+
+        <div class="titlebox">
+            <h2>투표하기</h2>
+            <h3 class="subtitle">{{theme.month}}월에 극장에서 보고 싶은 영화에 투표해주세요</h3>
         </div>
+
+        <ul class="vote-movie-list">
+            {% for votemovie in votemovies %}
+            <li class="vote-movie-item">
+                {% if votemovie.movie.poster %}
+                <div class="movie-poster" style="background-image: url('{{votemovie.movie.poster}}');"></div>
+                {% else %}
+                <div class="movie-poster no-image"></div>
+                {% endif %}
+
+                <div class="submit-input-box">
+                    <div class="movie-info">
+                        <h3 class="movie-title">{{ votemovie.movie.title }}</h3>
+
+                        <h5> {{ votemovie.vote_num }}표 </h5>
+
+                        <form action="{% url 'vote' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{ votemovie.id }}" name="votemovie_id">
+                            <button name="movie_id" value="{{ votemovie.movie.id }}" class="submit-btn"
+                                type="submit">투표하기</button>
+                        </form>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
     </div>
-    {% endfor %}
 </body>
 
 
