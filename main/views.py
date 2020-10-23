@@ -170,6 +170,8 @@ def movie(request):
         movie_seq = request.POST.get('movieSeq')
         comment = request.POST.get('comment')
 
+        print("movie_id : " + movie_id)
+
         movie_obj = Movie.objects.all() #현재 Movie model 전부 가져오기
 
         if movie_obj.filter(movie_id = movie_id, movie_seq=movie_seq).exists() == False : 
