@@ -1,8 +1,26 @@
-<h1>login page</h1>
+{% extends 'base_header.html' %}
+{% load static %}
 
-<form action="" method="post">
-    {% csrf_token %}
-    <input type="text" name="username">
-    <input type="password" name="password">
-    <input type="submit" value="로그인">
-</form>
+{% block title %}
+login
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="login-main">
+    <form class = "login-form" action="" method="post">
+        {% csrf_token %}
+        <div class="form-title">로그인하고 투표해보세요!</div>
+        <div class="login-field">
+            <div class="login-info">
+                <input class="input__name" autocomplete="off" type="text" name="username" placeholder="아이디를 입력해 주세요.">
+                <input class="input__pwd" autocomplete="off" type="password" name="password" placeholder="비밀번호를 입력해 주세요.">
+            </div>
+            <input class= "login-btn" type="submit" value="로그인" />
+        </div>
+    </form>
+</main>
+{% endblock %}

@@ -72,6 +72,8 @@ body {
 
 body {
     font-family: "NanumSquare", sans-serif;
+    display: flex;
+    flex-direction: column;
 }
 
 .header {
