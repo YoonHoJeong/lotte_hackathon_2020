@@ -35,7 +35,7 @@
             <div class="auth-box">
                 {% if user.is_authenticated %}
                 <div class="auth-info">
-                    {{user}}님
+                    {{user}}{% if user.is_staff %}(관리자){% endif %}님
                 </div>
                 <a href="{% url 'logout_view' %}">로그아웃</a>
                 {% else %}
@@ -44,6 +44,8 @@
                 {% endif %}
             </div>
         </nav>
+        {% block header-content %}
+        {% endblock %}
     </header>
 
     {% block content %}
