@@ -50,8 +50,7 @@
                 <form action="{% url 'vote' %}" method="POST">
                     {% csrf_token %}
                     <input type="hidden" value="{{ votemovie.id }}" name="votemovie_id">
-
-                    <button name="votemovie" value="{{ votemovie.movie.id }}" class="submit-btn"
+                    <button name="movie_id" value="{{ votemovie.movie.id }}" class="submit-btn"
                         type="submit">투표하기</button>
                 </form>
             </div>
