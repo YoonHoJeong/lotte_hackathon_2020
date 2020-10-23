@@ -33,13 +33,16 @@ class Movie(models.Model):
 
     @classmethod
     def create(cls, movie_obj):
+        production_year = int(movie_obj.get('production_year') + '0')
+        runtime = int(movie_obj.get('runtime') + '0')
+        
         return cls(
             title= movie_obj.get('title'), 
             poster= movie_obj.get('poster'), 
             genre= movie_obj.get('genre'), 
             director= movie_obj.get('director'), 
-            production_year= movie_obj.get('production_year'), 
-            runtime= movie_obj.get('runtime'), 
+            production_year= production_year,
+            runtime= runtime,
             plot= movie_obj.get('plot'), 
             movie_id= movie_obj.get('movie_id'), 
             movie_seq= movie_obj.get('movie_seq')
