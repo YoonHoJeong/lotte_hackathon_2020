@@ -101,7 +101,7 @@ def home(request):
     theme = get_month_theme(1)
     
     votemovies = VoteMovie.objects.filter(theme__title=theme.title)
-
+    votemovies = votemovies.order_by('-vote_num')
 
     return render(request, "home.html", {'votemovies' : votemovies, 'theme': theme})
 
@@ -396,6 +396,15 @@ def vote(request):
             return redirect("/?is_voted=0")
     return redirect("home")
 
+def delete_vote_movie(request):
+    if request.method == "POST":
+        vote_movie_id = request.POST.get('votemovie_id')
+        vmovie_instance = VoteMovie.objects.get(id=vote_movie_id)
+        vmovie_instance.delete()
+
+        return redirect("/?delete=1")
+    return redirect("/?delete=0")
+        
 
 
             

@@ -207,8 +207,9 @@ body {
 .btn {
     border: none;
     border-radius: 17px;
-    margin-top: 5px;
+    margin-top: 12px;
     color: white;
+    background-color: none;
     font-size: 0.9rem;
 
     text-align: center;

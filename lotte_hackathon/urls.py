@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from main.views import home, comment, search, movie, vote, enroll_movie, enroll_movie_search
+from main.views import home, comment, search, movie, vote, enroll_movie, enroll_movie_search, delete_vote_movie
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,4 +30,5 @@ urlpatterns = [
     path('vote/', vote, name='vote'),
     path('enroll_movie/', enroll_movie, name='enroll_movie'),
     path('enroll_movie_search/', enroll_movie_search, name='enroll_movie_search'),
+    path('delete_vote_movie/', delete_vote_movie, name='delete_vote_movie')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
