@@ -7,12 +7,11 @@
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/search.css' %}">
 <link rel="stylesheet" href="{% static 'css/comment.css' %}">
-<script src="https://kit.fontawesome.com/9760767faf.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 {% endblock %}
 
-{% block theme-month %} 12월, {% endblock %}
-{% block theme-title %} 롯데시네마에서 다시 보고 싶은 "마음이 따뜻해지는 크리스마스 영화"를 알려주세요 {% endblock %}
+{% block theme-month %} {{theme.month}}월, {% endblock %}
+{% block theme-title %} {{theme.subtitle}} {% endblock %}
 
 {% block content %}
 <div class="search-box">

@@ -1,15 +1,21 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 
+import calendar
 # Create your models here.
 
 
 # 이번 달의 테마, 관리자가 생성함.
 class Theme(models.Model):
+    MONTH_CHOICES = [(str(i), calendar.month_name[i]) for i in range(1,13)]
+
     title = models.CharField(max_length=200)
+    month = models.CharField(max_length=10, choices=MONTH_CHOICES, default='1')
+    subtitle = models.CharField(max_length=200, null=True)
 
     def __str__(self):
-        return self.title
+        return self.title + " / " + f"{self.month}월"
 
 
 # 의견이 1개라도 작성된 Movie를 저장

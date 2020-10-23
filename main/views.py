@@ -86,9 +86,17 @@ def isSavedMovie(movie, movie_id, movie_seq):
 # Create your views here.
 
 def home(request):
-    votemovies = VoteMovie.objects.all()
+    current_month = (int(datetime.now().strftime('%m')) + 1) % 12
+    if current_month == 0:
+        current_month = 12
 
-    return render(request, "home.html", {'votemovies' : votemovies})
+    # default theme - 다음 달
+    theme = Theme.objects.filter(month = str(current_month)).first()
+    
+    votemovies = VoteMovie.objects.filter(theme__title=theme.title)
+
+
+    return render(request, "home.html", {'votemovies' : votemovies, 'theme': theme})
 
 def enroll_movie(request):
     themes = Theme.objects.all()
@@ -145,6 +153,7 @@ def enroll_movie(request):
 def enroll_movie_search(request):
     search_list = []
     themes = Theme.objects.all()
+
     if request.method == "GET":
         comment_movies = Movie.objects.all()
         query = request.GET['query']
@@ -157,8 +166,16 @@ def enroll_movie_search(request):
     return render(request, 'enroll_movie.html', {'comment_movies':comment_movies, 'search_list': search_list, 'themes':themes})
 
 def comment(request):
+    # 2달 뒤 테마
+    next_month = (int(datetime.now().strftime('%m')) + 2) % 12
+    if next_month == 0:
+        next_month = 12
+
+    # default theme - 다음 달
+    theme = Theme.objects.filter(month = str(next_month)).first()
+    
     top_movies = Movie.objects.all().order_by('num_like')[:8]
-    return render(request, "comment.html", {"top_movies" : top_movies})
+    return render(request, "comment.html", {"top_movies" : top_movies, "theme": theme})
 
 def movie(request):
 
@@ -326,6 +343,13 @@ def movie(request):
 
 
 def search(request):
+    next_month = (int(datetime.now().strftime('%m')) + 2) % 12
+    if next_month == 0:
+        next_month = 12
+
+    # default theme - 다음 달
+    theme = Theme.objects.filter(month = str(next_month)).first()
+
     # request -> response
     # response로 받은 데이터 뿌려주기
     query = ""
@@ -342,7 +366,7 @@ def search(request):
             # 검색어가 없는 경우, api 호출 x
             return redirect('comment')
 
-    return render(request, "search.html", {"search_list": search_list, "search_cnt": search_cnt})
+    return render(request, "search.html", {"search_list": search_list, "search_cnt": search_cnt, "theme":theme} )
 
 @login_required(login_url='/login/')
 def vote(request):

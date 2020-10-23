@@ -14,10 +14,12 @@
     {% block css %}
     {% endblock %}
 
-    {% block js %}
     {% if err_msg %}
     <script>alert('{{err_msg}}')</script>
     {% endif %}
+    <script src="https://kit.fontawesome.com/9760767faf.js" crossorigin="anonymous"></script>
+
+    {% block js %}
     {% endblock %}
 </head>
 
