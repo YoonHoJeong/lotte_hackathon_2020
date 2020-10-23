@@ -3,6 +3,8 @@ from django.db.models import Count
 from .models import Movie, Comment, Theme
 from django.conf import settings
 from datetime import datetime
+from django.urls import reverse
+from urllib.parse import urlencode
 
 from django.contrib.auth.decorators import login_required
 
@@ -83,15 +85,20 @@ def get_search_list(queries):
 def isSavedMovie(movie, movie_id, movie_seq):
     return movie.movie_id == movie_id and movie.movie_seq == movie_seq
 
+def get_month_theme(add_month):
+    # 2달 뒤 테마
+    certain_month = (int(datetime.now().strftime('%m')) + add_month) % 12
+    if certain_month == 0:
+        certain_month = 12
+
+    # default theme - 다음 달
+    theme = Theme.objects.filter(month = str(certain_month)).first()
+    return theme
 # Create your views here.
 
 def home(request):
-    current_month = (int(datetime.now().strftime('%m')) + 1) % 12
-    if current_month == 0:
-        current_month = 12
-
     # default theme - 다음 달
-    theme = Theme.objects.filter(month = str(current_month)).first()
+    theme = get_month_theme(1)
     
     votemovies = VoteMovie.objects.filter(theme__title=theme.title)
 
@@ -166,14 +173,9 @@ def enroll_movie_search(request):
     return render(request, 'enroll_movie.html', {'comment_movies':comment_movies, 'search_list': search_list, 'themes':themes})
 
 def comment(request):
-    # 2달 뒤 테마
-    next_month = (int(datetime.now().strftime('%m')) + 2) % 12
-    if next_month == 0:
-        next_month = 12
 
-    # default theme - 다음 달
-    theme = Theme.objects.filter(month = str(next_month)).first()
-    
+    theme = get_month_theme(2) # 2달뒤 theme
+
     top_movies = Movie.objects.all().order_by('num_like')[:8]
     return render(request, "comment.html", {"top_movies" : top_movies, "theme": theme})
 
@@ -343,12 +345,8 @@ def movie(request):
 
 
 def search(request):
-    next_month = (int(datetime.now().strftime('%m')) + 2) % 12
-    if next_month == 0:
-        next_month = 12
-
     # default theme - 다음 달
-    theme = Theme.objects.filter(month = str(next_month)).first()
+    theme = get_month_theme(2)
 
     # request -> response
     # response로 받은 데이터 뿌려주기
@@ -370,6 +368,9 @@ def search(request):
 
 @login_required(login_url='/login/')
 def vote(request):
+    theme = get_month_theme(1) # 다음달 테마
+    votemovies = VoteMovie.objects.filter(theme__title = theme.title)
+
     if request.method == 'POST':
 
         vote_objs = Vote.objects.all()
@@ -378,25 +379,22 @@ def vote(request):
         movie_obj = Movie.objects.get(pk=movie_id)
         vote_movie = VoteMovie.objects.get(pk=votemovie_id)
 
-        if vote_objs.exists() == True :
-            if vote_objs.all().filter(movie = movie_obj, user = request.user).exists() == False :
-                vote = Vote()
-                vote.user = request.user
-                vote.movie = movie_obj            
-                vote_movie.vote_num = vote_movie.vote_num + 1
-                vote.save()
-                vote_movie.save()
-        else :
+        is_already_vote = Vote.objects.filter(movie = movie_obj, user = request.user)
+
+        if is_already_vote:
+            # 이미 투표했을 때
+            vote_status = True
+            return redirect("/?is_voted=1")
+        else:
+            # 투표를 안 했을 때
             vote = Vote()
             vote.user = request.user
-            vote.movie = movie_obj
+            vote.movie = movie_obj            
             vote_movie.vote_num = vote_movie.vote_num + 1
             vote.save()
             vote_movie.save()
-
-        votemovies = VoteMovie.objects.all()
-
-        return render(request, "home.html", {'votemovies' : votemovies})
+            return redirect("/?is_voted=0")
+    return redirect("home")
 
 
 

@@ -7,8 +7,22 @@
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
-<script src="https://kit.fontawesome.com/9760767faf.js" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block js %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>    
+    const urlParams = new URLSearchParams(window.location.search);
+    const is_voted = urlParams.get('is_voted');
+    if (is_voted === "1") {
+        alert("해당 영화는 이미 투표하셨습니다!");
+        window.location.replace("/");
+    } else if (is_voted === "0") {
+        alert("투표가 완료되었습니다!");
+        window.location.replace("/");
+    }
+    
+</script>
 {% endblock %}
 
 {% block theme-month %} {{theme.month}}월, {% endblock %}

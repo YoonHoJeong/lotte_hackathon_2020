@@ -77,12 +77,17 @@ class Comment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.user.username + " / " + self.movie.title
 
 # 홈화면에서 투표, 투표수를 셀 때 사용.
 class Vote(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username + " / " + self.movie.title
 
 # 영화상세 화면에서 좋아요 수를 셀 때 사용.
 class Like(models.Model):
