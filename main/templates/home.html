@@ -79,7 +79,7 @@
                     <div class="poster-fg">
                         <h3 class="movie-title">{{ votemovie.movie.title }}</h3>
 
-                        <h5 class="vote-cnt"> <i class="fas fa-heart"></i>{{ votemovie.vote_num }} </h5>
+                        <h5 class="vote-cnt"> <i class="fas fa-heart"></i>{{ votemovie.get_voters|length }} </h5>
                         {% if user in votemovie.get_voters %}
                         <a href="{% url 'unvote' votemovie.id %}">
                             <button class="btn submit-btn" type="submit">취소하기</button>
