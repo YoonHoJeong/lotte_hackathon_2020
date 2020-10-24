@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from main.views import home, comment, search, movie, vote, enroll_movie, enroll_movie_search, delete_vote_movie
+from main.views import home, comment, search, movie, vote, unvote, enroll_movie, enroll_movie_search, delete_vote_movie, movie_detail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,7 +27,9 @@ urlpatterns = [
     path('search/', search, name="search"),
     path('', include('accounts.urls')),
     path('movie/', movie, name = 'movie'),
+    path('movie_detail/<int:movie_id>', movie_detail, name = 'movie_detail'),
     path('vote/', vote, name='vote'),
+    path('unvote/<int:vote_movie_id>', unvote, name='unvote'),
     path('enroll_movie/', enroll_movie, name='enroll_movie'),
     path('enroll_movie_search/', enroll_movie_search, name='enroll_movie_search'),
     path('delete_vote_movie/', delete_vote_movie, name='delete_vote_movie')

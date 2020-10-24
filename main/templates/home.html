@@ -15,8 +15,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     const is_voted = urlParams.get('is_voted');
     const deleteFlag = urlParams.get('delete');
-
-    console.log(deleteFlag);
+    const unvote = urlParams.get('unvote');
 
     if (is_voted === "1") {
         alert("이미 투표한 영화입니다.");
@@ -31,6 +30,14 @@
         window.location.replace("/");
     } else if (deleteFlag === "0") {
         alert("삭제되지 않았습니다.");
+        window.location.replace("/");
+    }
+
+    if (unvote === "True") {
+        alert("투표가 취소되었습니다");
+        window.location.replace("/");
+    } else if (unvote === "False") {    
+        alert("투표가 취소되지 못했습니다");
         window.location.replace("/");
     }
 </script>
@@ -72,14 +79,19 @@
                     <div class="poster-fg">
                         <h3 class="movie-title">{{ votemovie.movie.title }}</h3>
 
-                        <h5 class="vote-cnt"> <i class="fas fa-heart"></i>{{ votemovie.vote_num }} </h5>
+                        <h5 class="vote-cnt"> <i class="fas fa-heart"></i>{{ votemovie.get_voters|length }} </h5>
+                        {% if user in votemovie.get_voters %}
+                        <a href="{% url 'unvote' votemovie.id %}">
+                            <button class="btn submit-btn" type="submit">취소하기</button>
+                        </a>
+                        {% else %}
                         <form action="{% url 'vote' %}" method="POST">
                             {% csrf_token %}
                             <input type="hidden" value="{{ votemovie.id }}" name="votemovie_id">
-                            <button class="btn submit-btn"
-                                type="submit">투표하기</button>
+                            <button class="btn submit-btn" type="submit">투표하기</button>
                         </form>
-                        <a href="{% url 'movie' %}">
+                        {% endif %}
+                        <a href="{% url 'movie_detail' votemovie.movie.id %}">
                             <button class="btn detail-btn" type="submit">상세보기</button>
                         </a>
                         {% if user.is_staff %}

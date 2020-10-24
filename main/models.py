@@ -68,6 +68,12 @@ class VoteMovie(models.Model):
     def __str__(self):
         return self.movie.title + " / " + self.theme.title
 
+    def get_voters(self):
+        votes = self.vote_set.all()
+        voters = [vote.user for vote in votes]
+        return voters
+            
+
 
 # 의견글, 사용자, 영화, 생성된 시간이 기입됨.
 class Comment(models.Model):
@@ -87,7 +93,7 @@ class Vote(models.Model):
     vote_movie = models.ForeignKey(VoteMovie, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.user.username + " / " + self.movie.title
+        return self.user.username + " / " + self.vote_movie.movie.title
 
 # 영화상세 화면에서 좋아요 수를 셀 때 사용.
 class Like(models.Model):
