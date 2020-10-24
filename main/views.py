@@ -173,14 +173,23 @@ def enroll_movie_search(request):
     return render(request, 'enroll_movie.html', {'comment_movies':comment_movies, 'search_list': search_list, 'themes':themes})
 
 def comment(request):
-
     theme = get_month_theme(2) # 2달뒤 theme
 
     top_movies = Movie.objects.all().order_by('num_like')[:8]
     return render(request, "comment.html", {"top_movies" : top_movies, "theme": theme})
 
-def movie(request):
+def movie_detail(request, movie_id):
+    # vote movie처럼 기존 데이터가 있을 때
+    movie = get_object_or_404(Movie, pk=movie_id)
+    if movie:
+        comment_list = Comment.objects.filter(movie__id = movie_id)
+        likes = Like.objects.filter(movie__id = movie_id)
+        like_num = likes.count()
+        user_like = likes.filter(user__id = request.user.id)
+        print(like_num, user_like)
+    return render(request, "movie.html", {"movie" : movie, "comment_list" : comment_list, "like_num" : like_num, 'user_like' : user_like})
 
+def movie(request):
     max_plot_length = 300    
     user_like = 0
     comment_list = []
@@ -189,8 +198,6 @@ def movie(request):
         movie_id = request.POST.get('movieId')
         movie_seq = request.POST.get('movieSeq')
         comment = request.POST.get('comment')
-
-        print("movie_id : " + movie_id)
 
         movie_obj = Movie.objects.all() #현재 Movie model 전부 가져오기
 
@@ -220,7 +227,6 @@ def movie(request):
                 tmp_obj['plot'] = plot
                 tmp_obj['genre'] = movie["genre"]
                 tmp_obj['runtime'] = movie["runtime"]
-
                 tmp_obj['poster'] = poster
                 tmp_obj['production_year'] = movie['prodYear']
                 tmp_obj['director'] = movie['directors']['director'][0]['directorNm']
@@ -343,7 +349,6 @@ def movie(request):
 
     return render(request, "movie.html", {"movie" : tmp_obj, "comment_list" : comment_list, "like_num" : like_num, 'user_like' : user_like})
 
-
 def search(request):
     # default theme - 다음 달
     theme = get_month_theme(2)
@@ -396,6 +401,13 @@ def vote(request):
             vote_movie.save()
             return redirect("/?is_voted=0")
     return redirect("home")
+
+def unvote(request, vote_movie_id):
+    vote = Vote.objects.filter(vote_movie__id = vote_movie_id, user__id = request.user.id)
+    if vote:
+        vote.delete()
+        return redirect('/?unvote=True')
+    return redirect('/?unvote=False')
 
 def delete_vote_movie(request):
     if request.method == "POST":
