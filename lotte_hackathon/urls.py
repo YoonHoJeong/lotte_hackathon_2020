@@ -24,7 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name="home"),
     path('comment/', comment, name="comment"),
-    path('search/', search, name="search"),
+    path('search/', search, name='search'),
     path('', include('accounts.urls')),
     path('movie/', movie, name = 'movie'),
     path('movie_detail/<int:movie_id>', movie_detail, name = 'movie_detail'),

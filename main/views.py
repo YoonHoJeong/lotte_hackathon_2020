@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 
 import requests
 
-from .models import VoteMovie, Vote, Movie, Comment, Like
+from .models import VoteMovie, Vote, Movie, Comment, Like, Theme
 
 API_KEY = "1YJNU2R902583045L4Z6"
 BASE_URL = f"http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey={API_KEY}"
@@ -42,6 +42,7 @@ def get_search_list(queries):
     movie_list = res['Data'][0].get('Result')
 
     search_cnt = res['TotalCount']  # 검색 결과 개수
+
     if not movie_list:  
         # 검색 결과가 없을 때
         return [], 0
@@ -261,12 +262,11 @@ def movie(request):
             comment_instance = Comment(user = request.user, movie = tmp_obj, content = comment)        
             comment_instance.save()
         else :
-
             like_obj = Like.objects.all()
 
             user_like = 1
 
-            if like_obj.filter(movie_id = movie_id, movie_seq=movie_seq).exists() == True :
+            if like_obj.filter(movie = tmp_obj, user = request.user).exists() == True :
                 user_like = -1
  
             if user_like == 1:

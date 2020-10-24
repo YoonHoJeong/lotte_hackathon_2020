@@ -18,7 +18,7 @@
     <form class="search-form" action="{% url 'search' %}" method="GET">
         {% csrf_token %}
         <div class="search-title">
-            <span class="search-theme"> 마음이 따뜻해지는 크리스마스 영화 </span>
+            <span class="search-theme"> {{theme.title}} </span>
             <span> 검색하기 </span>
         </div>
 

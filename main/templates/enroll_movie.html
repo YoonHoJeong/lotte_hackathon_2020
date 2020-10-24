@@ -64,8 +64,6 @@
                 </div>
                 <input class="enroll-btn red-btn" type="submit" value="등록하기"/>
             </div>
-
-
         </form>
     </li>
     {% endfor %}
@@ -80,27 +78,28 @@
     </li>
     {% for movie in comment_movies %}
     <li class="movie-item">
-        <form id="movie{{ forloop.counter }}-form" action="{% url 'enroll_movie' %}" method="POST">
-            {% csrf_token %}
-            <input type="hidden" value={{movie.movie_id}} name="movieId">
-            <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
-            <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
+        
+            <!--<a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">-->
                 {% if movie.poster %}
                 <div class="movie-poster" style="background-image: url('{{movie.poster}}');"></div>
                 {% else %}
                 <div class="movie-poster no-image"></div>
                 {% endif %}
-            </a>
+            <!--</a>-->
             <div class="submit-input-box">
                 <div class="movie-info">
-                    <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
+                    <!--<a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">-->
                         <h3 class="movie-title">{{movie.title}}</h3>
-                    </a>
+                    <!--</a>-->
                     <span class="movie-summary">{{movie.production_year}} | {{movie.runtime}}분</span>
                 </div>
+                <form id="movie{{ forloop.counter }}-form" action="{% url 'enroll_movie' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" value={{movie.movie_id}} name="movieId">
+                    <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
                 <input class="enroll-btn red-btn" type="submit" value="등록하기"/>
-            </div>
-        </form>
+                </form>
+            </div>        
     </li>
     {% endfor %}
 </ul>
