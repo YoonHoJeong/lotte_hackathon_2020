@@ -178,16 +178,27 @@ def comment(request):
     top_movies = Movie.objects.all().order_by('num_like')[:8]
     return render(request, "comment.html", {"top_movies" : top_movies, "theme": theme})
 
-def movie_detail(request, movie_id):
+def movie_detail(request, movie_id = None):
     # vote movie처럼 기존 데이터가 있을 때
-    movie = get_object_or_404(Movie, pk=movie_id)
-    if movie:
-        comment_list = Comment.objects.filter(movie__id = movie_id)
-        likes = Like.objects.filter(movie__id = movie_id)
-        like_num = likes.count()
-        user_like = likes.filter(user__id = request.user.id)
-        print(like_num, user_like)
-    return render(request, "movie.html", {"movie" : movie, "comment_list" : comment_list, "like_num" : like_num, 'user_like' : user_like})
+    if movie_id:
+    
+        movie = Movie.objects.get(pk= movie_id)
+        if movie:
+            comment_list = Comment.objects.filter(movie__id = movie_id)
+            likes = Like.objects.filter(movie__id = movie_id)
+            like_num = likes.count()
+            user_like = likes.filter(user__id = request.user.id)
+            print(like_num, user_like)
+        return render(request, "movie.html", {"movie" : movie, "comment_list" : comment_list, "like_num" : like_num, 'user_like' : user_like})
+    else:
+        # POST 요청일 때, API 호출
+        movie_id = request.POST.get("movieId")
+        movie_seq = request.POST.get("movieSeq")
+        movie = get_search_list({'movieId':movie_id, 'movieSeq':movie_seq})[0][0]
+        if movie:
+            return render(request, "movie.html", {"movie" : movie})
+    return redirect("enroll_movie")
+
 
 def movie(request):
     max_plot_length = 300    
@@ -202,7 +213,7 @@ def movie(request):
         movie_obj = Movie.objects.all() #현재 Movie model 전부 가져오기
 
         if movie_obj.filter(movie_id = movie_id, movie_seq=movie_seq).exists() == False : 
-
+            # movie object가 있을 때
             res = requests.get(BASE_URL + f"&movieId={movie_id}&movieSeq={movie_seq}").json()
 
             result_list = res['Data'][0]['Result']
@@ -263,7 +274,7 @@ def movie(request):
 
             user_like = 1
 
-            if like_obj.filter(movie_id = movie_id, movie_seq=movie_seq).exists() == True :
+            if like_obj.filter(movie__movie_id = movie_id, movie__movie_seq=movie_seq).exists() == True :
                 user_like = -1
  
             if user_like == 1:
@@ -403,9 +414,13 @@ def vote(request):
     return redirect("home")
 
 def unvote(request, vote_movie_id):
-    vote = Vote.objects.filter(vote_movie__id = vote_movie_id, user__id = request.user.id)
+    vote = Vote.objects.filter(vote_movie__id = vote_movie_id, user__id = request.user.id).first()
+    
     if vote:
         vote.delete()
+        vote_movie = vote.vote_movie
+        vote_movie.vote_num = len(vote_movie.get_voters())
+        vote_movie.save()
         return redirect('/?unvote=True')
     return redirect('/?unvote=False')
 

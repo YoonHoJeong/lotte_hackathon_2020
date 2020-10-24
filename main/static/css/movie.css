@@ -62,6 +62,7 @@
     min-width: 245px;
     padding-top: 46.2%;
 
+    background-color: white;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -254,19 +255,13 @@
     opacity: 0.7;
 }
 
-
 .container.line {
     color: #949494;
     width: 100%;
     padding: 10px 10px;
 }
 
-
-
-
-
-
-.container.movie-poster.no-image {
+.no-image {
     background-image: url('/static/images/noImage.gif');
     background-repeat: no-repeat;
     background-size: contain;

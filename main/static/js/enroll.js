@@ -93,8 +93,10 @@ document.addEventListener("DOMContentLoaded", () => {
     enrollBtns.forEach(enrollBtn => {
         enrollBtn.addEventListener("click", (e) => {
             e.preventDefault();
+            console.log(e.target.parentNode.parentNode);
             disableScroll();
             enrollForm.style.display = 'flex';
+            console.log(enrollForm);
             const myForm = e.target.parentNode.parentNode;
             movieTitle = myForm.querySelector(".movie-title").innerText;
             let inputs = myForm.querySelectorAll("input");

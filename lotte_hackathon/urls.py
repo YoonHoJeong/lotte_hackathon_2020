@@ -27,6 +27,7 @@ urlpatterns = [
     path('search/', search, name="search"),
     path('', include('accounts.urls')),
     path('movie/', movie, name = 'movie'),
+    path('movie_detail/', movie_detail, name = 'movie_detail'),
     path('movie_detail/<int:movie_id>', movie_detail, name = 'movie_detail'),
     path('vote/', vote, name='vote'),
     path('unvote/<int:vote_movie_id>', unvote, name='unvote'),
