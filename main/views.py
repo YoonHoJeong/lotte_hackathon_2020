@@ -99,9 +99,12 @@ def get_month_theme(add_month):
 def home(request):
     # default theme - 다음 달
     theme = get_month_theme(1)
-    
-    votemovies = VoteMovie.objects.filter(theme__title=theme.title)
-    votemovies = votemovies.order_by('-vote_num')
+
+    votemovies = VoteMovie.objects.all()
+
+    if theme != None :    
+        votemovies = VoteMovie.objects.filter(theme__title=theme.title)
+        votemovies = votemovies.order_by('-vote_num')
 
     return render(request, "home.html", {'votemovies' : votemovies, 'theme': theme})
 
