@@ -1,6 +1,6 @@
 .vote-container {
-    display: flex;
-    flex-direction: column;
+    /* display: flex;
+    flex-direction: column; */
 
     align-items: center;
     justify-content: center;
@@ -8,9 +8,10 @@
     background-color: black;
 
     position: relative;
-    height: 100%;
+    height: fit-content;
 
     padding: 100px;
+    padding-top: 0px;
 }
 
 .titlebox {
@@ -23,6 +24,7 @@
 
     color: white;
     /* background-color: #D44242; */
+    margin-top: 100px;
 }
 
 .titlebox h2 {
@@ -136,7 +138,7 @@
     line-height: 20px;
 }
 
-.submit-btn {
+.submit-btn, .unvote-btn {
     border: none;
     background-color: #f15d5d;
     border-radius: 17px;
@@ -152,6 +154,10 @@
 
     outline: none;
     cursor: pointer;
+}
+
+.unvote-btn {
+    background-color: grey;
 }
 
 .delete-btn {
