@@ -94,12 +94,12 @@
                 {% else %}
                 <div class="movie-poster no-image"></div>
                 {% endif %}
-            </a>
+            <!--</a>-->
             <div class="submit-input-box">
                 <div class="movie-info">
-                    <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
+                    <!--<a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">-->
                         <h3 class="movie-title">{{movie.title}}</h3>
-                    </a>
+                    <!--</a>-->
                     <span class="movie-summary">{{movie.production_year}} | {{movie.runtime}}분</span>
                 </div>
                 <input class="enroll-btn red-btn" type="submit" value="등록하기" />
