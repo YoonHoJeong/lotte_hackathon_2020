@@ -13,7 +13,7 @@ import requests
 from .models import VoteMovie, Vote, Movie, Comment, Like, Theme
 
 API_KEY = "1YJNU2R902583045L4Z6"
-BASE_URL = f"http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey={API_KEY}"
+BASE_URL = f"http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey={API_KEY}&listCount=500"
 
 # api 사용, 검색 결과 반환하는 함수
 def get_search_list(queries):
@@ -48,6 +48,7 @@ def get_search_list(queries):
         return [], 0
     else:   
         # 검색 결과가 있을 때
+
         for movie in movie_list:
             tmp_movie = {}
             """ title parsing """
@@ -61,9 +62,10 @@ def get_search_list(queries):
 
             movie_id = movie['movieId']
             movie_seq = movie['movieSeq']
-            
+                
             """ plot contraction """
             plot = movie["plots"]['plot'][0]['plotText']
+
             if len(plot) > max_plot_length:
                 plot = plot[:max_plot_length] + "..."
 
@@ -81,6 +83,7 @@ def get_search_list(queries):
             tmp_movie['movie_seq'] = movie_seq
 
             search_list.append(tmp_movie)
+                
         return search_list, search_cnt
 
 def isSavedMovie(movie, movie_id, movie_seq):
