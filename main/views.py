@@ -420,13 +420,3 @@ def delete_vote_movie(request):
 
         return redirect("/?delete=1")
     return redirect("/?delete=0")
-        
-
-
-            
-
-
-
-
-
-    
