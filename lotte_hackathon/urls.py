@@ -18,16 +18,19 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from main.views import home, comment, search, movie, vote, unvote, enroll_movie, enroll_movie_search, delete_vote_movie, movie_detail
+from main.views import home, comment, search, movie, vote, unvote, enroll_movie, enroll_movie_search, delete_vote_movie, movie_detail, like, unlike, delete_comment
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name="home"),
     path('comment/', comment, name="comment"),
+    path('delete_comment/<movie_id>/<movie_seq>', delete_comment, name="delete_comment"),
     path('search/', search, name='search'),
     path('', include('accounts.urls')),
     path('movie/', movie, name = 'movie'),
     path('movie_detail/', movie_detail, name = 'movie_detail'),
+    path('like/<int:movie_id>', like, name = 'like'),
+    path('unlike/<movie_id>/<movie_seq>', unlike, name = 'unlike'),
     path('movie_detail/<int:movie_id>', movie_detail, name = 'movie_detail'),
     path('vote/', vote, name='vote'),
     path('unvote/<int:vote_movie_id>', unvote, name='unvote'),

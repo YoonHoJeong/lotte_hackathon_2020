@@ -10,6 +10,16 @@ login
 <link rel="stylesheet" href="{% static 'css/signup.css' %}">
 {% endblock %}
 
+{% block js %}
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            alert(message);
+        {% endfor %}
+    {% endif %}
+</script>
+{% endblock %}
+
 {% block content %}
 <main class="signup-main">
     <form class = "signup-form" action="" method="post">

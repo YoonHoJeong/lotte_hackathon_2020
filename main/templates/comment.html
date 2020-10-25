@@ -8,10 +8,11 @@
 {% if top_movies %}
 <ul class="movie-list">
     <li class="movie-list-title">
-        <span class="search-term">많이 추천된 영화들</span>
+        <span class="search-term">현재 추천수 BEST 영화들</span>
     </li>
     {% for movie in top_movies %}
     <li class="movie-item">
+        
         <div class="movie-ranking">{{ forloop.counter }}</div>
         <form id="movie{{ forloop.counter }}-form" action="{% url 'movie' %}" method="GET">
             {% csrf_token %}
@@ -19,9 +20,9 @@
             <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
             <a href="javascript:$('#movie{{ forloop.counter }}-form').submit();">
                 {% if movie.poster %}
-                <div class="movie-poster" style="background-image: url('{{movie.poster}}');"></div>
+                <div class="movie-poster" style="background-image: url('{{movie.poster}}');"><div class="like_cnt"><i class="fas fa-heart"></i>{{movie.get_likes|length}}</div></div>
                 {% else %}
-                <div class="movie-poster no-image"></div>
+                <div class="movie-poster no-image"><div class="like_cnt"> <i class="fas fa-heart"></i>{{movie.get_likes|length}}</div></div>
                 {% endif %}
             </a>
             <div class="submit-input-box">
@@ -33,8 +34,6 @@
                 </div>
                 <input class="submit-btn red-btn" type="submit" value="의견내기">
             </div>
-
-
         </form>
     </li>
     {% endfor %}

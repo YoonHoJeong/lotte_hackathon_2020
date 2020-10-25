@@ -1,104 +1,125 @@
+{% extends 'base_header.html' %}
+
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
+{% block title %}
+movie
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="{% static 'css/movie.css' %}">
+{% endblock %}
+{% block js %}
+<script src="https://kit.fontawesome.com/9760767faf.js" crossorigin="anonymous"></script>
+{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'css/movie.css' %}">
-    <script src="https://kit.fontawesome.com/9760767faf.js" crossorigin="anonymous"></script>
-
-</head>
-
+{% block content %}
 <main class="movie-main">
 
 
-<div class="movie-body">
-    {% if movie.poster %}
-    <div class="body-bg" style="background-image: url('{{movie.poster}}');"></div>
-    {% else %}
-    <div class="body-bg" style="background-color: #2E2E2E"></div>
-    {% endif %}
-
-    <div class="movie-container">
-        <div class="close-btn">
-            <a href="javascript:history.back();">
-                <i class="fas fa-times"></i>
-            </a>
-        </div>
+    <div class="movie-body">
         {% if movie.poster %}
-        <div class="movie-poster" style="background-image: url('{{movie.poster}}');"></div>
+        <div class="body-bg" style="background-image: url('{{movie.poster}}');"></div>
         {% else %}
-        <div class="movie-poster no-image"></div>
+        <div class="body-bg" style="background-color: #2E2E2E"></div>
         {% endif %}
 
-        <div class='movie-summary'>
-            <div class='movie-title'>{{movie.title}}</div>
-            <ul class='movie-info-list'>
-                <li class="movie-info-item">
-                    <div class='movie-strong'>장르</div>
-                    <div class="movie-info-content">{{movie.genre}} |
-                        {{movie.production_year}}
-                        개봉 | {{movie.runtime}} 분</div>
+        <div class="movie-container">
+            <div class="close-btn">
+                <a href="javascript:history.back();">
+                    <i class="fas fa-times"></i>
+                </a>
+            </div>
+            {% if movie.poster %}
+            <div class="movie-poster" style="background-image: url('{{movie.poster}}');"></div>
+            {% else %}
+            <div class="movie-poster no-image"></div>
+            {% endif %}
+
+            <div class='movie-summary'>
+                <div class='movie-title'>{{movie.title}}</div>
+                <ul class='movie-info-list'>
+                    <li class="movie-info-item">
+                        <div class='movie-strong'>장르</div>
+                        <div class="movie-info-content">{{movie.genre}} |
+                            {{movie.production_year}}
+                            개봉 | {{movie.runtime}} 분</div>
+                    </li>
+                    <li class="movie-info-item">
+                        <div class='movie-strong'>감독</div>
+                        <div class="movie-info-content">{{movie.director}}</div>
+                    </li>
+                    <li class="movie-info-item">
+                        <div class='movie-strong'>줄거리</div>
+                        <div class='movie-info-content'>{{movie.plot}}</div>
+                    </li>
+                </ul>
+                <form class="like-form" action="{% url 'movie' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" value={{movie.movie_id}} name="movieId">
+                    <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
+                    {% if is_like %}
+                    <a href="{% url 'unlike' movie.movie_id movie.movie_seq %}">
+                        <div class="like-btn" style="background-color: grey;">재개봉 응원 취소할래요</div>
+                    </a>
+                    {% else %}
+                    <input class="like-btn" type="submit" value="재개봉 응원해요">
+                    {% endif %}
+                    <div class="like-cnt"> <i class="fas fa-heart"></i> {{ like_num }}개</div>
+                </form>
+            </div>
+        </div>
+        <div class="comment-container">
+            <div class='comment-intro'>
+                <span class='lotte'>롯데시네마 </span>
+                <span class='re'>재개봉을 원해요!</span>
+            </div>
+            <ul class="comment-list">
+                {% for comment in comment_list %}
+                <li class="comment-item">
+                    {% if comment %}
+                    <div class="comment-content"> {{ comment.content }} 
+                        {% if comment.user == user %}
+                        <a href="{% url 'delete_comment' movie.movie_id movie.movie_seq %}">
+                            <button class="delete-comment-btn"><i class="fas fa-trash-alt"></i></button>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div class="comment-user"> {{ comment.user.username }} | {{ comment.created_at }} </div>
+                    {% endif %}
+                    
                 </li>
-                <li class="movie-info-item">
-                    <div class='movie-strong'>감독</div>
-                    <div class="movie-info-content">{{movie.director}}</div>
-                </li>
-                <li class="movie-info-item">
-                    <div class='movie-strong'>줄거리</div>
-                    <div class='movie-info-content'>{{movie.plot}}</div>
-                </li>
+                {% endfor %}
             </ul>
-            <form class="like-form" action="{% url 'movie' %}" method="POST">
+            <form class="comment-form" action="{% url 'movie' %}" method="POST">
                 {% csrf_token %}
-                <input type="hidden" value={{movie.movie_id}} name="movieId">
-                <input type="hidden" value={{movie.movie_seq}} name="movieSeq">
-                <input class="like-btn" type="submit" value="재개봉 응원해요">
-                <div class="like-cnt"> <i class="fas fa-heart"></i> {{ like_num }}개</div>
-            </form>
-        </div>
-    </div>
-    <div class="comment-container">
-        <div class='comment-intro'>
-            <span class='lotte'>롯데시네마 </span>
-            <span class='re'>재개봉을 원해요!</span>
-        </div>
-        <ul class="comment-list">
-            {% for comment in comment_list %}
-            <li class="comment-item">
-                {% if comment %}
-                <div class="comment-content"> {{ comment.content }} </div>
-                <div class="comment-user"> {{ comment.user.username }} | {{ comment.created_at }} </div>
+                {% if user.is_authenticated %}
+                <div class="auth-info">{{user.username}} 님</div>
                 {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-        <form class ="comment-form" action="{% url 'movie' %}" method="POST">
-            {% csrf_token %}
-            <div class="auth-info">{{user.username}} 님</div>
-            <input name="title" value="{{movie.title}}" type="hidden">
-            <input class='comment-input' name="comment" autocomplete="off" type="text"
-                placeholder="해당 영화의 극장 재개봉에 대한 의견을 자유롭게 남겨주세요.">
-            <input type="hidden" value="{{movie.movie_id}}" name="movieId">
-            <input type="hidden" value="{{movie.movie_seq}}" name="movieSeq">
-            <input class="comment-submmit-btn" type="submit" value="작성">
-        </form>
+                <input name="title" value="{{movie.title}}" type="hidden">
+                <input class='comment-input' name="comment" autocomplete="off" type="text"
+                    placeholder="해당 영화의 극장 재개봉에 대한 의견을 자유롭게 남겨주세요.">
+                <input type="hidden" value="{{movie.movie_id}}" name="movieId">
+                <input type="hidden" value="{{movie.movie_seq}}" name="movieSeq">
+                <input class="comment-submmit-btn" type="submit" value="작성">
+            </form>
 
-        {% if user_like == -1 %}
-        <script>
-            alert("이미 좋아요를 누르셨습니다")
-        </script>
-        {% elif user_like == 1 %}
-        <script>
-            alert("의견이 등록되었습니다\n스크린에서 다시 만나길 바랍니다!")
-        </script>
-        {% endif %}
+            {% if user_like == -1 %}
+            <script>
+                alert("이미 좋아요를 누르셨습니다")
+            </script>
+            {% elif user_like == 1 %}
+            <script>
+                alert("의견이 등록되었습니다\n스크린에서 다시 만나길 바랍니다!")
+            </script>
+            {% endif %}
+            {% if is_comment %}
+            <script>
+                alert("의견 작성은 영화당 하나만 가능합니다.");
+            </script>
+            {% endif %}
 
+        </div>
     </div>
-</div>
 </main>
-</html>
+{% endblock %}

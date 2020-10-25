@@ -31,3 +31,18 @@
     font-weight: 700;
     z-index: 1;
 }
+
+.like_cnt {
+    position: absolute;
+    bottom: -25px;
+    right: 0px;
+    color: black;
+    
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.like_cnt i {
+    color: #D44242;
+    margin-right: 3px;
+}
