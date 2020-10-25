@@ -21,7 +21,6 @@ class Theme(models.Model):
 # 의견이 1개라도 작성된 Movie를 저장
 class Movie(models.Model):
     title = models.CharField(max_length=100)
-    theme = models.ManyToManyField(Theme, default=None)
     poster = models.ImageField(blank=False, null=True)
 
     genre = models.CharField(max_length=200)
@@ -57,6 +56,10 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_likes(self):
+        likes = self.like_set.all()
+        return likes
 
 
 # 투표 리스트에 올릴 영화 - 관리자가 등록할 영화들

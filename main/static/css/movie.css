@@ -195,7 +195,24 @@
 .comment-content {
     font-weight: 100;
     width: 100%;
+    display: flex;
 }
+
+.comment-content button {
+    margin-left: 15px;
+    border: none;
+    background-color: rgba(0,0,0,0);
+    color: white;
+
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+}
+.comment-content button:hover {
+    color: #D44242;
+}
+
 
 .comment-user {
     font-weight: 700;

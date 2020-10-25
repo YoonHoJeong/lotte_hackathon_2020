@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .forms import UserForm
+from django.contrib import messages 
 
 # Create your views here.
 
@@ -43,8 +44,8 @@ def signup_view(request, user_type):
             login(request, new_user)
             return redirect('home')
         else:
-            return redirect('signup_view')
-
+            messages.error(request, "Error")
     else:
         # method가 get 일 때
-        return render(request, "signup.html")
+        pass
+    return render(request, "signup.html")

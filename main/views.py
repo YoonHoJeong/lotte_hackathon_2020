@@ -13,7 +13,7 @@ import requests
 from .models import VoteMovie, Vote, Movie, Comment, Like, Theme
 
 API_KEY = "1YJNU2R902583045L4Z6"
-BASE_URL = f"http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey={API_KEY}"
+BASE_URL = f"http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey={API_KEY}&listCount=500"
 
 # api 사용, 검색 결과 반환하는 함수
 def get_search_list(queries):
@@ -30,7 +30,7 @@ def get_search_list(queries):
 
     search_list = []
     movie_list = []
-    max_plot_length = 100
+    max_plot_length = 300
     query = ""
 
     for query_name, query_content in queries.items():
@@ -48,6 +48,7 @@ def get_search_list(queries):
         return [], 0
     else:   
         # 검색 결과가 있을 때
+
         for movie in movie_list:
             tmp_movie = {}
             """ title parsing """
@@ -61,9 +62,10 @@ def get_search_list(queries):
 
             movie_id = movie['movieId']
             movie_seq = movie['movieSeq']
-            
+                
             """ plot contraction """
             plot = movie["plots"]['plot'][0]['plotText']
+
             if len(plot) > max_plot_length:
                 plot = plot[:max_plot_length] + "..."
 
@@ -81,6 +83,7 @@ def get_search_list(queries):
             tmp_movie['movie_seq'] = movie_seq
 
             search_list.append(tmp_movie)
+                
         return search_list, search_cnt
 
 def isSavedMovie(movie, movie_id, movie_seq):
@@ -108,6 +111,30 @@ def home(request):
         votemovies = votemovies.order_by('-vote_num')
 
     return render(request, "home.html", {'votemovies' : votemovies, 'theme': theme})
+
+def like(request, movie_id):
+    # movie = Movie.objects.get(pk=movie_id)
+    like = Like.objects.filter(movie__id = movie_id, user = request.user)
+
+    if like:
+        # 이미 좋아요를 눌렀을 때,
+        pass
+    else: 
+        like_instance = Like(movie__id=movie_id, user=request.user)
+        like.save()
+
+    return redirect(f"/movie_detail/{movie_id}")
+
+def unlike(request, movie_id, movie_seq):
+    like = Like.objects.filter(movie__movie_id = movie_id, movie__movie_seq = movie_seq, user = request.user).first()
+    movie = like.movie
+    
+
+    if like:
+        like.delete()
+    movie.num_like = len(movie.get_likes())
+    movie.save()
+    return redirect('/movie_detail/'+str(movie.id))
 
 def enroll_movie(request):
     themes = Theme.objects.all()
@@ -179,20 +206,19 @@ def enroll_movie_search(request):
 def comment(request):
     theme = get_month_theme(2) # 2달뒤 theme
 
-    top_movies = Movie.objects.all().order_by('num_like')[:8]
+    top_movies = Movie.objects.all().order_by('-num_like')[:8]
     return render(request, "comment.html", {"top_movies" : top_movies, "theme": theme})
 
 def movie_detail(request, movie_id = None):
     # vote movie처럼 기존 데이터가 있을 때
     if movie_id:
-    
         movie = Movie.objects.get(pk= movie_id)
         if movie:
             comment_list = Comment.objects.filter(movie__id = movie_id)
-            likes = Like.objects.filter(movie__id = movie_id)
-            like_num = likes.count()
+            likes = movie.get_likes()
             user_like = likes.filter(user__id = request.user.id)
-            print(like_num, user_like)
+            like_num = len(likes)
+        
         return render(request, "movie.html", {"movie" : movie, "comment_list" : comment_list, "like_num" : like_num, 'user_like' : user_like})
     else:
         # POST 요청일 때, API 호출
@@ -203,19 +229,32 @@ def movie_detail(request, movie_id = None):
             return render(request, "movie.html", {"movie" : movie})
     return redirect("enroll_movie")
 
+def delete_comment(request, movie_id, movie_seq):
+    comment = Comment.objects.filter(movie__movie_id = movie_id, movie__movie_seq = movie_seq, user = request.user).first()
+    movie = comment.movie
+    if comment:
+        comment.delete()
+    return redirect('/movie_detail/'+str(movie.id))
 
 def movie(request):
     max_plot_length = 300    
     user_like = 0
     comment_list = []
+    is_comment = False
+    is_like = None 
+    movie_id = None
+    movie_seq = None
 
     if request.method == "POST":
         movie_id = request.POST.get('movieId')
         movie_seq = request.POST.get('movieSeq')
         comment = request.POST.get('comment')
 
+        if not request.user.is_authenticated:
+            return redirect('login_view')
+        is_like = Like.objects.filter(movie__movie_id = movie_id, movie__movie_seq = movie_seq, user=request.user).first()
         movie_obj = Movie.objects.all() #현재 Movie model 전부 가져오기
-
+        
         if movie_obj.filter(movie_id = movie_id, movie_seq=movie_seq).exists() == False : 
             # movie object가 있을 때
             res = requests.get(BASE_URL + f"&movieId={movie_id}&movieSeq={movie_seq}").json()
@@ -265,25 +304,31 @@ def movie(request):
             movie_instance.save()
             # 모든 요소 가져와서 Movie 모델 생성
 
-        selec_movie = movie_obj.filter(movie_id=movie_id, movie_seq=movie_seq)
-
-        tmp_obj = selec_movie[0]        
-
+        tmp_obj = movie_obj.filter(movie_id=movie_id, movie_seq=movie_seq).first()
+        is_comment = False
         if comment :
-            comment_instance = Comment(user = request.user, movie = tmp_obj, content = comment)        
-            comment_instance.save()
+            tmp_comment = Comment.objects.filter(user = request.user, movie = tmp_obj)
+            if tmp_comment:
+                # 이미 comment를 남긴 영화일 때
+                is_comment = True
+            else:
+                comment_instance = Comment(user = request.user, movie = tmp_obj, content = comment)        
+                comment_instance.save()
         else :
+            # comment가 없는 경우 => 좋아요 눌렀을 때
             like_obj = Like.objects.all()
 
             user_like = 1
 
             if like_obj.filter(movie = tmp_obj, user = request.user).exists() == True :
+                # 이미 like를 눌렀을 때
                 user_like = -1
  
             if user_like == 1:
+                # like를 안 누른 영화일 때
                 like_instance = Like(movie=tmp_obj, user=request.user)
                 like_instance.save()      
-                tmp_obj.num_like += 1
+                
 
         comment_obj = Comment.objects.all()
 
@@ -297,11 +342,11 @@ def movie(request):
                 tmp_com_obj['content'] = comment.content
 
                 comment_list.append(tmp_com_obj)            
-
+        tmp_obj.num_like = len(tmp_obj.get_likes())
+        tmp_obj.save()
     elif request.method == "GET":
         movie_id = request.GET.get('movieId')
         movie_seq = request.GET.get('movieSeq')
-
         comment_obj = Comment.objects.all()
 
         for comment in comment_obj :
@@ -348,20 +393,25 @@ def movie(request):
             tmp_obj['movie_seq'] = movie_seq
 
             break
+        
 
     else:
         return redirect('comment')
 
+    
+
     like_obj = Like.objects.all()
 
     like_num = 0
-
+    if request.user.is_authenticated:
+        is_like = Like.objects.filter(movie__movie_id = movie_id, movie__movie_seq = movie_seq, user=request.user).first()
+    
     for like in like_obj :
         if like.movie.movie_id == movie_id and like.movie.movie_seq == movie_seq :
             like_num += 1
+    
 
-
-    return render(request, "movie.html", {"movie" : tmp_obj, "comment_list" : comment_list, "like_num" : like_num, 'user_like' : user_like})
+    return render(request, "movie.html", {"movie" : tmp_obj, "comment_list" : comment_list, "like_num" : like_num, 'user_like' : user_like, 'is_comment':is_comment, 'is_like':is_like})
 
 def search(request):
     # default theme - 다음 달
@@ -371,7 +421,7 @@ def search(request):
     # response로 받은 데이터 뿌려주기
     query = ""
     search_list = []
-    max_plot_length = 100
+    max_plot_length = 300
 
     if request.method == "GET":
         query = request.GET['query']
@@ -435,13 +485,3 @@ def delete_vote_movie(request):
 
         return redirect("/?delete=1")
     return redirect("/?delete=0")
-        
-
-
-            
-
-
-
-
-
-    
