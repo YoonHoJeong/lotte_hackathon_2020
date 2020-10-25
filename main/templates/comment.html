@@ -5,12 +5,14 @@
 
 {% block subcontent %}
 <!--Top Requsted Movie-->
+{% if top_movies %}
 <ul class="movie-list">
     <li class="movie-list-title">
         <span class="search-term">많이 추천된 영화들</span>
     </li>
     {% for movie in top_movies %}
     <li class="movie-item">
+        <div class="movie-ranking">{{ forloop.counter }}</div>
         <form id="movie{{ forloop.counter }}-form" action="{% url 'movie' %}" method="GET">
             {% csrf_token %}
             <input type="hidden" value={{movie.movie_id}} name="movieId">
@@ -37,4 +39,7 @@
     </li>
     {% endfor %}
 </ul>
+{% else %}
+<div class="no-top-movies">등록된 영화가 없습니다. 가장 먼저 의견글을 남겨보세요!</div>
+{% endif %}
 {% endblock %}

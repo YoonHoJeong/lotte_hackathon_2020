@@ -1,6 +1,8 @@
 .vote-container {
-    /* display: flex;
-    flex-direction: column; */
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
 
     align-items: center;
     justify-content: center;
@@ -201,6 +203,8 @@
 /* 정윤호 추가 */
 .home-body {
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .link-box {

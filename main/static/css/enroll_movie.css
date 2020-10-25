@@ -99,3 +99,7 @@
     justify-self: center;
     align-self: center;
 }
+
+.movie-list-title {
+    font-weight: 700;
+}
